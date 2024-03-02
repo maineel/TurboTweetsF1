@@ -17,4 +17,10 @@ app.use(cookieParser());
 import { userRouter } from './routes/user.route.js';
 app.use('/api/v1/users', userRouter);
 
+import driverRouter from './routes/driver.routes.js';
+import constructorRouter from './routes/constructor.routes.js';
+
+// app.use("/api/v1/driverDetails", driverRouter);
+// app.use("/api/v1/constructorDetails", constructorRouter);
+
 export { app };
