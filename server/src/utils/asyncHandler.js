@@ -9,8 +9,4 @@ const asyncHandler = (fn) => async (req, res, next) => {
     }
 }
 
-<<<<<<< HEAD
 export {asyncHandler};
-=======
-export { asyncHandler }
->>>>>>> ea5286eff9c104a0b05ae90afde64a3ffd26068d

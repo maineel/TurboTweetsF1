@@ -1,5 +1,4 @@
-import { User } from "./user.models";
-
+import mongoose, {Schema} from "mongoose";
 const tournamentSchema = new Schema({
     tournamentName:{
         type: String,
@@ -8,14 +7,22 @@ const tournamentSchema = new Schema({
         lowercase: true,
         trim: true,
     },
-    userId:{
+    creatorId:{
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
     initialBet:{
         type: Number,
         required: true,
-    }
+    },
+    raceId:{
+        type: Schema.Types.ObjectId,
+        ref: 'Race',
+    },
+    participants:[{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 },{timestamps: true});
 
 

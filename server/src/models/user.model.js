@@ -36,6 +36,10 @@ const userSchema = new Schema({
     },
     teams:[
         {
+            "raceId": {
+                type: Schema.Types.ObjectId,
+                ref: "Race"
+            },
             "Drivers": [],
             "Constructors": []
         }
