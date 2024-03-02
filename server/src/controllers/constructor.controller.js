@@ -7,37 +7,39 @@ import  {asyncHandler}  from '../utils/asyncHandler.js';
 // const client = new MongoClient(url);
 // const dbName = DB_NAME;
 
-// const driverDetails = asyncHandler(async(req,res) => {
+// const constructorDetails = asyncHandler(async(req,res) => {
 //     await client.connect();
 //     console.log('Connected successfully to MongoDB');
 
 //     const db = client.db(dbName);
-//     const collection = db.collection('drivers');
+//     const collection = db.collection('constructors');
 
 //     // Fetch data from the API and pick specific attributes
 //     const apiData = await fetchApiData();
+//     // console.log(apiData);
     
-//     for(let i=0;i<22;i++){
-//         const driver = apiData.MRData.DriverTable.Drivers[i];
+//     // console.log(apiData.MRData.ConstructorTable.Constructors[3]);
+//     for(let i=0;i<10;i++){
+//         const constructor = apiData.MRData.ConstructorTable.Constructors[i];
 //         const selectedAttributes = {
-//             driverNumber: driver.permanentNumber,
-//             driverName: driver.givenName + " " + driver.familyName,
-//             driverNationality: driver.nationality,
+//             constructorName: constructor.name,
+//             constructorNationality: constructor.nationality,
 //         };
 //         const insertResult = await collection.insertOne(selectedAttributes);
 //         console.log('Inserted document:', insertResult.insertedId);
 //     }
-//     // console.log(apiData.MRData.DriverTable.Drivers[3]);
-//     // Insert the selected data into the MongoDB collection
 // })
 
 // async function fetchApiData() {
-//     const response = await fetch('http://ergast.com/api/f1/2023/drivers.json');
+//     const response = await fetch('http://ergast.com/api/f1/2023/constructors.json');
 //     if (!response.ok) {
 //         throw new Error(`API fetch failed with status: ${response.status}`);
 //     }
 //     return response.json();
 // }
 
+
+
 export {  };
+
 
