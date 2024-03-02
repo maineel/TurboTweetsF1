@@ -2,6 +2,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { User } from '../models/user.model.js';
+import { Driver } from '../models/driver.model.js';
+import { Constructor } from '../models/constructor.model.js';
 
 const generatAccessAndRefreshTokens = async(user) => {
     const accessToken = user.generateAccessToken();
@@ -159,30 +161,52 @@ const getUser = asyncHandler(async (req, res) => {
     );
 });
 
+const driversInBudget = async(drivers) => {
+    const totalBudget = drivers.reduce(async (total, driver) => total + await Driver.findByID(driver).driverPrice, 0);
+    return (totalBudget > 100);
+};
+
+const constructorsInBudget = async(constructors) => {
+    const totalBudget = constructors.reduce(async (total, constructor) => total + await Driver.findByID(constructor).constructorPrice, 0);
+    return (totalBudget > 50);
+};
+
 const createTeam = asyncHandler(async(req, res) => {
-    // get userId from req.user
-    // check if user already has a team
-    // check if it has 5 drivers
-    // check if it has 2 constructors
-    // create a new team
+    
     const user = req.user;
-    const { teamName } = req.body;
-    if(!teamName){
-        throw new ApiError(400, "Team name is required");
+    if(!user){
+        throw new ApiError(401, "User not found");
+    }
+    const { drivers, constructors, raceId } = req.body;
+    if(!raceId){
+        throw new ApiError(400, "Race Id is required");
+    }
+    if(!user.teams.find(team => team.raceId === raceId)){
+        throw new ApiError(300, "User already has a team for the race"); 
+    }
+    if(!drivers || drivers.length !== 5){
+        throw new ApiError(400, "5 drivers are required");
+    }
+    if(!constructors || constructors.length !== 2){
+        throw new ApiError(400, "2 constructors are required");
+    }
+    if(driversInBudget(drivers)){
+        throw new ApiError(400, "Drivers are not in budget");
+    }
+    if(constructorsInBudget(constructors)){
+        throw new ApiError(400, "Constructors are not in budget");
+    }
+    const team = {
+        raceId,
+        drivers,
+        constructors,
     }
 
-    if(user.team){
-        throw new ApiError(400, "User already has a team");
-    }
-
-    const team = await Team.create({
-        name: teamName,
-        owner: user._id,
-        members: [user._id]
-    });
-
-    user.team = team._id;
+    const currentTeams = await User.findById(user._id).select("teams");
+    currentTeams.push(team);
+    user.teams = currentTeams;
     await user.save();
+
     return res.status(201).json(
         new ApiResponse(200, team, "Team created successfully")
     );
