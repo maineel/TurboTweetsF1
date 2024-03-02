@@ -29,12 +29,11 @@ const userSchema = new Schema({
         default: 0
     },
     teams:[
-        [
-            {
-                type: String,
-            }
-        ]   
+        {
+            "Drivers": [],
+            "Constructors": []
+        }
     ]
 }, {timestamps: true});
 
-export const User = mongoose.model('User', userSchema); 
+export const User = mongoose.model('User', userSchema);
