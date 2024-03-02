@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-const router = Router();
+const driverRouter = Router();
 
 // router.route("/addDriverDetails").post(driverDetails);
 
-export default router;
+export { driverRouter };

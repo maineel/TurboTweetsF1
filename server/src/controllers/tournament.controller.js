@@ -1,10 +1,9 @@
-import { asyncHandler } from '../utils/asyncHandler.js';
-import { ApiError } from '../utils/ApiError.js'
-import { ApiResponse } from '../utils/ApiResponse.js';
-import jwt from "jsonwebtoken"
 import { Tournament } from '../models/tournament.model.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { ApiError } from '../utils/ApiError.js';
+import { ApiResponse } from '../utils/ApiResponse.js';
 
-const createTournament = asyncHandler(async (req, res, next) => {
+const createTournament = asyncHandler(async(req,res) => {
     const { tournamentName, initialBet, raceId } = req.body;
     const creatorId = req.user._id;
 
@@ -27,9 +26,10 @@ const createTournament = asyncHandler(async (req, res, next) => {
     return res
     .status(200)
     .json(new ApiResponse(200, "Tournament created successfully", tournament));
+
 });
 
-const getTournament = asyncHandler(async (req, res, next) => {
+const getTournaments = asyncHandler(async(req,res) => {
     const raceId = req.params.raceId;
 
     if(!raceId) {
@@ -50,5 +50,6 @@ const getTournament = asyncHandler(async (req, res, next) => {
 
 });
 
+const updateTournament = asyncHandler(async(req,res) => {});
 
-export { createTournament, getTournament };
+export { createTournament, getTournaments, updateTournament };

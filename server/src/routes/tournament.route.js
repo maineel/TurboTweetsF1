@@ -1,10 +1,10 @@
-import { asyncHandler } from '../middleware/async.js';
-import { Tournament } from '../models/tournament.model.js';
-import { ApiResponse } from '../utils/ApiResponse.js';
-import { ApiError } from '../utils/ApiError.js';
+import { Router } from "express";
+import { createTournament, getTournaments, updateTournament } from "../controllers/tournament.controller.js";
 
-const createTournament = asyncHandler(async (req, res) => {});
+const tournamentRouter = Router();
 
-const getTournaments = asyncHandler(async (req, res) => {});
+tournamentRouter.route("/createTournament").post(createTournament);
+tournamentRouter.route("/getTournaments").get(getTournaments);
+tournamentRouter.route("/updateTournament").put(updateTournament);
 
-export { createTournament, getTournaments };
+export { tournamentRouter };
