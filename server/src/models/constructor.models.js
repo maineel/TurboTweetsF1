@@ -26,4 +26,4 @@ const constructorSchema = new Schema({
     },
 }, {timestamps: true});
 
-export default mongoose.model('Constructor', constructorSchema);
+export const Constructor = mongoose.model('Constructor', constructorSchema);
