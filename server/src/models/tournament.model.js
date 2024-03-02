@@ -19,4 +19,4 @@ const tournamentSchema = new Schema({
 },{timestamps: true});
 
 
-export const Race = mongoose.model('Race', raceSchema);
+export const Tournament = mongoose.model('Tournament', tournamentSchema);
