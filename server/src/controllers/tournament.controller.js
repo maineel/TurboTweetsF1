@@ -50,6 +50,31 @@ const getTournaments = asyncHandler(async(req,res) => {
 
 });
 
-const updateTournament = asyncHandler(async(req,res) => {});
+const updateTournament = asyncHandler(async(req,res) => {
+    const participantId = req.user._id;
+    const tournamentId = req.body.tournamentId;
+
+    if(!participantId || !tournamentId) {
+        throw new ApiError(400, "Please provide all the details");
+    }
+
+    const tournament = await Tournament.findById(tournamentId);
+
+    if(!tournament) {
+        throw new ApiError(404, "No tournament found for the given id");
+    }
+
+    const updatedTournament = await Tournament.findByIdAndUpdate(tournamentId, 
+        {$push: {participants: participantId}}, 
+        {new: true});
+
+    if(!updatedTournament) {
+        throw new ApiError(500, "Internal Server Error");
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, "Tournament updated successfully", updatedTournament));
+});
 
 export { createTournament, getTournaments, updateTournament };
