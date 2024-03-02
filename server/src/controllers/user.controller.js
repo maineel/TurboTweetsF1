@@ -159,4 +159,33 @@ const getUser = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken, getUser };
+const createTeam = asyncHandler(async(req, res) => {
+    // get userId from req.user
+    // check if user already has a team
+    // check if it has 5 drivers
+    // check if it has 2 constructors
+    // create a new team
+    const user = req.user;
+    const { teamName } = req.body;
+    if(!teamName){
+        throw new ApiError(400, "Team name is required");
+    }
+
+    if(user.team){
+        throw new ApiError(400, "User already has a team");
+    }
+
+    const team = await Team.create({
+        name: teamName,
+        owner: user._id,
+        members: [user._id]
+    });
+
+    user.team = team._id;
+    await user.save();
+    return res.status(201).json(
+        new ApiResponse(200, team, "Team created successfully")
+    );
+});
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken, getUser, createTeam };
