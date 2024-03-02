@@ -14,13 +14,23 @@ app.use(express.static("public")); // it is a addres folder, where we will keep 
 
 app.use(cookieParser());
 
+import { adminRouter } from './routes/admin.route.js';
+app.use('/api/v1/admin', adminRouter);
+
 import { userRouter } from './routes/user.route.js';
 app.use('/api/v1/users', userRouter);
 
-import driverRouter from './routes/driver.routes.js';
-import constructorRouter from './routes/constructor.routes.js';
+import { raceRouter } from './routes/race.route.js';
+app.use('/api/v1/race', raceRouter);
 
-// app.use("/api/v1/driverDetails", driverRouter);
-// app.use("/api/v1/constructorDetails", constructorRouter);
+import { driverRouter } from './routes/driver.route.js';
+app.use('/api/v1/driver', driverRouter);
+
+import { constructorRouter } from './routes/constructor.route.js';
+app.use('/api/v1/constructor', constructorRouter);
+
+import { tournamentRouter } from './routes/tournament.route.js';
+app.use('/api/v1/tournament', tournamentRouter);
+
 
 export { app };
