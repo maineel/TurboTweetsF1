@@ -53,10 +53,6 @@ const raceSchema = new Schema({
         type: Date,
         required: true,
     },
-    time:{
-        type: String,
-        required: true,
-    },
 },{timestamps: true});
 
 

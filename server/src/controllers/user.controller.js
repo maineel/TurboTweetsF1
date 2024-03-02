@@ -167,7 +167,7 @@ const driversInBudget = async(drivers) => {
 };
 
 const constructorsInBudget = async(constructors) => {
-    const totalBudget = constructors.reduce(async (total, constructor) => total + await Driver.findByID(constructor).constructorPrice, 0);
+    const totalBudget = constructors.reduce(async (total, constructor) => total + await Constructor.findByID(constructor).constructorPrice, 0);
     return (totalBudget > 50);
 };
 

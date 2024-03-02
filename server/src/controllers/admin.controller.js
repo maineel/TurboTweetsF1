@@ -53,7 +53,7 @@ async function fetchConstructorApiData() {
 }
 
 const fetchRaceApiData = async () => {
-    const response = await fetch('http://ergast.com/api/f1/2024.json');
+    const response = await fetch('http://ergast.com/api/f1/2023.json');
     if (!response.ok) {
         throw new ApiError(500, `API fetch failed with status: ${response.status}`);
     }
@@ -63,15 +63,16 @@ const getRaceDetails = asyncHandler(async (req, res) => {
     try {
         const data = await fetchRaceApiData();
     
-        for(let i = 1; i <= 24; i++){
+        for(let i = 1; i <= data.MRData.RaceTable.Races.length; i++){
             const raceDetails = await Race.create({
                 raceName: data.MRData.RaceTable.Races[i-1].raceName,
                 raceNumber: i,
                 date: data.MRData.RaceTable.Races[i-1].date,
-                time: data.MRData.RaceTable.Races[i-1].time,
             });
             console.log(raceDetails);
         }
+
+        return res.status(200).json({"message": "Data fetched successfully"});
     } catch (error) {
         throw new ApiError(400, error.message);
     }
