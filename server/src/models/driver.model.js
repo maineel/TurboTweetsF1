@@ -27,6 +27,10 @@ const driverSchema = new Schema({
         type: Number,
         default: 0,
     },
+    headshot: {
+        type: String,
+        required: true,
+    }
 }, {timestamps: true});
 
 
