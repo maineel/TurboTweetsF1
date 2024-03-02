@@ -2,7 +2,7 @@ import mongoose, {Schema} from "mongoose";
 
 const driverSchema = new Schema({
     driverNumber:{
-        type: String,
+        type: number,
         required: true,
         unique: true,
     },
@@ -32,6 +32,7 @@ const driverSchema = new Schema({
         required: true,
     }
 }, {timestamps: true});
+
 
 
 
