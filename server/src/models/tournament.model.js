@@ -23,6 +23,11 @@ const tournamentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
+    status:{
+        type: String,
+        enum: ['pending', 'completed', 'ongoing'],
+        default: 'pending'
+    }
 },{timestamps: true});
 
 

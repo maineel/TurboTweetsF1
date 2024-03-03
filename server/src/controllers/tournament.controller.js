@@ -4,8 +4,9 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 
 const createTournament = asyncHandler(async(req,res) => {
-    const { tournamentName, initialBet, raceId } = req.body;
-    const creatorId = req.user._id;
+    const { tournamentName, initialBet, raceId, userId } = req.body;
+    console.log(req.body);
+    const creatorId = userId;
 
     if(!tournamentName || !initialBet || !raceId) {
         throw new ApiError(400, "Please provide all the details");
@@ -25,7 +26,7 @@ const createTournament = asyncHandler(async(req,res) => {
 
     return res
     .status(200)
-    .json(new ApiResponse(200, "Tournament created successfully", tournament));
+    .json(new ApiResponse(200, tournament, "Tournament created successfully"));
 
 });
 
@@ -51,7 +52,7 @@ const getTournaments = asyncHandler(async(req,res) => {
 });
 
 const updateTournament = asyncHandler(async(req,res) => {
-    const participantId = req.user._id;
+    const participantId = req.body.userId;
     const tournamentId = req.body.tournamentId;
 
     if(!participantId || !tournamentId) {
