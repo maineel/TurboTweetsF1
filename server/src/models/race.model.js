@@ -20,6 +20,7 @@
 
 import mongoose, {Schema} from "mongoose";
 
+
 const raceSchema = new Schema({
     raceName:{
         type: String,
@@ -32,11 +33,11 @@ const raceSchema = new Schema({
         unique: true,
     },
     raceResults:[{
-        "Driver": {
+        "driverId": {
             type: Schema.Types.ObjectId,
             ref: "Driver"
         },
-        "Constructor": {
+        "constructorId": {
             type: Schema.Types.ObjectId,
             ref: "Constructor"
         },

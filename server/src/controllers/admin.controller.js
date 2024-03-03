@@ -1,6 +1,7 @@
 import { Race } from "../models/race.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import fetch from 'node-fetch';
 import { Constructor } from "../models/constructor.model.js";
 import { Driver } from "../models/driver.model.js";
@@ -78,9 +79,33 @@ const getRaceDetails = asyncHandler(async (req, res) => {
     }
 });
 
-const updateRaceData = asyncHandler(async (req, res) => {
-    
+const fetchRaceResultsApiData = async (raceNumber) => {
+    const response = await fetch(`http://ergast.com/api/f1/2023/${raceNumber}/results.json`);
+    if (!response.ok) {
+        throw new ApiError(500, `API fetch failed with status: ${response.status}`);
+    }
+    return response.json();
+}
+const getRaceResults = asyncHandler(async (req, res) => {
+    const raceNumber = req.body.raceNumber;
+    try {
+        const race = await Race.findOne({raceNumber: raceNumber});
+        const data = await fetchRaceResultsApiData(raceNumber);
+        const raceResults = data.MRData.RaceTable.Races[0].Results;
+        for(let i = 1; i <= raceResults.length; i++){
+            const driverId = await Driver.findOne({driverName: raceResults[i-1].Driver.givenName + " " + raceResults[i-1].Driver.familyName});
+            const constructorId = await Constructor.findOne({constructorName: raceResults[i-1].Constructor.name});
+            // console.log(driverId._id, constructorId._id);
+            const points = raceResults[i-1].points;
+            race.raceResults.push({driverId: driverId._id, constructorId: constructorId._id, points: points, position: i});
+            // console.log(race.raceResults[i]);
+        }
+        await race.save();
+        res.status(200).json(new ApiResponse(200, "Race Results Updated Successfully", race.raceResults));
+    } catch (error) {
+        throw new ApiError(400, error.message);
+    }
 });
 
 
-export { getRaceDetails, updateRaceData, driverDetails, constructorDetails }
+export { getRaceDetails, getRaceResults, driverDetails, constructorDetails }
