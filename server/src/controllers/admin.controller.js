@@ -60,6 +60,7 @@ const fetchRaceApiData = async () => {
     }
     return response.json();
 }
+
 const getRaceDetails = asyncHandler(async (req, res) => {
     try {
         const data = await fetchRaceApiData();
@@ -86,6 +87,7 @@ const fetchRaceResultsApiData = async (raceNumber) => {
     }
     return response.json();
 }
+
 const getRaceResults = asyncHandler(async (req, res) => {
     const raceNumber = req.body.raceNumber;
     try {
