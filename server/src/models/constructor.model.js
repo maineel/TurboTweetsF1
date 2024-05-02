@@ -20,14 +20,18 @@ const constructorSchema = new Schema({
         type: Number,
         default: 0,
     }],
+    totalPoints:{
+        type: Number,
+        default: 0,
+    },
     constructorPrice:{
         type: Number,
         default: 0,
     },
     logo: {
         type: String,
-        required: true,
     }
 }, {timestamps: true});
 
 export const Constructor = mongoose.model('Constructor', constructorSchema);
+

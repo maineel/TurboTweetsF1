@@ -16,24 +16,35 @@ const driverSchema = new Schema({
         required: true,
     },
     driverTeam:{
-        type: Schema.Types.ObjectId,
-        ref: 'Constructor',
+        type: String,
+    },
+    driverCode:{
+        type: String,
+        required: true,
+        unique: true,
+    },
+    driverDOB:{
+        type: Date,
+        required: true,
     },
     driverPoints:[{
         type: Number,
         default: 0,
     }],
+    totalPoints:{
+        type: Number,
+        default: 0,
+    },
     driverPrice:{
         type: Number,
         default: 0,
     },
     headshot: {
         type: String,
-        required: true,
+    },
+    position: {
+        type: Number,
     }
 }, {timestamps: true});
-
-
-
 
 export const Driver = mongoose.model('Driver', driverSchema);

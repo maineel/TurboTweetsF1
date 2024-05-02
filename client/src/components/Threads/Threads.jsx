@@ -64,7 +64,7 @@ function Threads() {
           Loading...
         </div>
       ) : (
-        <div className="w-3/4 h-full flex flex-row text-black mx-auto border-t-4 border-red-500 m-4">
+        <div className="w-3/4 h-full flex flex-row text-black mx-auto border-t-4 border-[#FF0000] m-4">
           <div className="w-3/4 flex flex-col m-2">
             <h1 className="text-xl text-white font-bold ml-4">
               Top Posts: Formula 1

@@ -16,7 +16,7 @@ function Accounts({ accounts }) {
   }
   return (
     <div
-      style={{ borderColor: accounts.banner_background_color || "red" }}
+      style={{ borderColor: accounts.banner_background_color || "#FF0000" }}
       className="h-auto text-white bg-[#2e2e2e] mt-4 p-2 mx-4 flex flex-row rounded-md border-b-4"
     >
       <img src={filteredUrl} style={{ width: "50px", height: "50px" }} />
