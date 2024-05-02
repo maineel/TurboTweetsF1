@@ -8,7 +8,7 @@ function ConstructorCard({ constructors }) {
     >
       <div className="flex flex-col">
         <h1 className="font-mono ml-2 text-2xl">
-          {constructors.constructorName} | {constructors.constructorNationality}
+          <b><u>{constructors.constructorName}</u></b> | {constructors.constructorNationality}
         </h1>
         <h2 className="font-mono italic m-2 text-xl font-bold" style={{ color: constructors.color || "#FF0000" }}>Total Points: {constructors.totalPoints}</h2>
       </div>

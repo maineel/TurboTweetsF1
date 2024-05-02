@@ -8,7 +8,7 @@ function DriverCard({ drivers }) {
     >
       <div className="flex flex-col">
         <h1 className="font-mono ml-2 text-xl">
-          {drivers.driverName} | {drivers.driverNumber} |{" "}
+          <b><u>{drivers.driverName}</u></b> | {drivers.driverNumber} |{" "}
           {drivers.driverNationality}
         </h1>
         <h2 className="font-mono italic ml-2 text-xl">{drivers.driverCode}</h2>
