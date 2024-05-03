@@ -10,6 +10,10 @@ app.use(express.urlencoded({extended: true, limit: "16kb"})) // with extended fl
 app.use(express.static("public")); // it is a addres folder, where we will keep files which we want to keep in public
 app.use(cookieParser());
 
+app.get('/', (req, res) => {
+    res.send("Welcome to TurboTweetsF1");
+})
+
 import { adminRouter } from './routes/admin.route.js';
 app.use('/api/v1/admin', adminRouter);
 
