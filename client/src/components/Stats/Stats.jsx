@@ -9,34 +9,20 @@ function Stats() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = "http://localhost:8000/api/v1/driver/driverDetails";
+      const driverUrl = "http://localhost:8000/api/v1/driver/driverDetails";
+      const constructorUrl = "http://localhost:8000/api/v1/constructor/constructorDetails";
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
+        const driverResponse = await fetch(driverUrl);
+        const constructorResponse = await fetch(constructorUrl);
+        if (!driverResponse.ok || !constructorResponse.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result = await response.json();
-        setDrivers(result);
-        // console.log(result);
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+        const driverResult = await driverResponse.json();
+        const constructorResult = await constructorResponse.json();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = "http://localhost:8000/api/v1/constructor/constructorDetails";
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        setConstructors(result);
-        // console.log(result);
+        setDrivers(driverResult);
+        setConstructors(constructorResult);
+
         setIsLoading(false);
       } catch (error) {
         console.error(error);
