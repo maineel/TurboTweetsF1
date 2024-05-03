@@ -9,8 +9,8 @@ function Stats() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const driverUrl = "http://localhost:8000/api/v1/driver/driverDetails";
-      const constructorUrl = "http://localhost:8000/api/v1/constructor/constructorDetails";
+      const driverUrl = "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
+      const constructorUrl = "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
       try {
         const driverResponse = await fetch(driverUrl);
         const constructorResponse = await fetch(constructorUrl);
