@@ -165,61 +165,49 @@ const fetchConstructorStandings = async () => {
   return data;
 };
 
-const getDriverStandings = asyncHandler(async (req, res) => {
-  try {
-    const data = await fetchDriverStandings();
-    const constructorData = await fetchConstructorStandings();
+const updateDriverAndConstructorStandings = async () => {
+  const data = await fetchDriverStandings();
+  const constructorData = await fetchConstructorStandings();
 
-    // console.log(data.MRData.StandingsTable.StandingsLists[0].DriverStandings);
+  const driverPoints = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+  const constructorPoints = constructorData.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
 
-    const driverPoints =
-      data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-    const constructorPoints =
-      constructorData.MRData.StandingsTable.StandingsLists[0]
-        .ConstructorStandings;
+  for (let i = 1; i <= driverPoints.length; i++) {
+    const code = driverPoints[i - 1].Driver.code;
+    const constructor = driverPoints[i - 1].Constructors[0].name;
+    const points = driverPoints[i - 1].points;
+    const position = driverPoints[i - 1].position;
 
-    for (let i = 1; i <= driverPoints.length; i++) {
-      const code = driverPoints[i - 1].Driver.code;
-      const constructor = driverPoints[i - 1].Constructors[0].name;
-      const points = driverPoints[i - 1].points;
-      const position = driverPoints[i - 1].position;
-
-      await Driver.updateOne(
-        { driverCode: code },
-        {
-          $set: {
-            position: position,
-            driverTeam: constructor,
-            totalPoints: points,
-          },
-        }
-      );
-    }
-
-    for (let i = 1; i <= constructorPoints.length; i++) {
-      const points = constructorPoints[i - 1].points;
-      const name = constructorPoints[i - 1].Constructor.name;
-      await Constructor.updateOne(
-        { constructorName: name},
-        { 
-            $set: { 
-                totalPoints: points 
-            } 
-        }
-      );
-    }
-    return res
-      .status(200)
-      .json(new ApiResponse(200, "Driver Standings Updated Successfully"));
-  } catch (error) {
-    throw new ApiError(400, error.message);
+    await Driver.updateOne(
+      { driverCode: code },
+      {
+        $set: {
+          position: position,
+          driverTeam: constructor,
+          totalPoints: points,
+        },
+      }
+    );
   }
-});
+
+  for (let i = 1; i <= constructorPoints.length; i++) {
+    const points = constructorPoints[i - 1].points;
+    const name = constructorPoints[i - 1].Constructor.name;
+    await Constructor.updateOne(
+      { constructorName: name},
+      { 
+          $set: { 
+              totalPoints: points 
+          } 
+      }
+    );
+  }
+};
 
 export {
   getRaceDetails,
   getRaceResults,
   driverDetails,
   constructorDetails,
-  getDriverStandings,
+  updateDriverAndConstructorStandings,
 };
