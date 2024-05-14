@@ -8,7 +8,6 @@ nodecron.schedule(
     "* 09 13 * * TUE", async () => {
         try{
             await updateDriverAndConstructorStandings();
-            console.log("Driver Standings Updated");
         } catch (error) {
             console.log(error);
         }
