@@ -5,12 +5,16 @@ import nodecron from 'node-cron';
 const adminRouter = Router();
 
 nodecron.schedule(
-    "* * * * * SUN", async () => {
+    "* * 12 * * MON", async () => {
         try{
             await updateDriverAndConstructorStandings();
         } catch (error) {
             console.log(error);
         }
+    },
+    {
+        scheduled: true,
+        timezone: "Asia/Kolkata",
     }
 )
 
