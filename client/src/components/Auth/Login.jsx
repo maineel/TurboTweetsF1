@@ -9,17 +9,16 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "https://turbotweetsf1.onrender.com/api/v1/users/login",
         {
-          method: "POST",
-          body: JSON.stringify({
-            email,
-            password,
-          }),
+          email,
+          password,
         }
       );
-      console.log(response.data);
+      if (response.status !== 200) {
+        throw new Error("Error in registering user");
+      }
       localStorage.setItem("accessToken", response.data.accessToken);
 
       window.location.href = "/";

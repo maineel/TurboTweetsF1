@@ -14,18 +14,16 @@ function Signup() {
       const response = await axios.post(
         "https://turbotweetsf1.onrender.com/api/v1/users/register",
         {
-            userName,
-            email,
-            password,
-            fullName
+          userName,
+          email,
+          password,
+          fullName,
         }
       );
-      console.log(response);
       if (response.status !== 200) {
         throw new Error("Error in registering user");
       }
-    //   console.log(response.json());
-      //   window.location.href = "/login";
+      window.location.href = "/login";
     } catch (err) {
       console.log(err);
     }
