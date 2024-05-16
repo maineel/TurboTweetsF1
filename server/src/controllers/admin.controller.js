@@ -12,10 +12,7 @@ const driverDetails = asyncHandler(async (req, res) => {
     for (let i = 1; i <= data.MRData.DriverTable.Drivers.length; i++) {
       const driverDetail = await Driver.create({
         driverNumber: data.MRData.DriverTable.Drivers[i - 1].permanentNumber,
-        driverName:
-          data.MRData.DriverTable.Drivers[i - 1].givenName +
-          " " +
-          data.MRData.DriverTable.Drivers[i - 1].familyName,
+        driverName:data.MRData.DriverTable.Drivers[i - 1].givenName +" " +data.MRData.DriverTable.Drivers[i - 1].familyName,
         driverNationality: data.MRData.DriverTable.Drivers[i - 1].nationality,
         driverCode: data.MRData.DriverTable.Drivers[i - 1].code,
         driverDOB: data.MRData.DriverTable.Drivers[i - 1].dateOfBirth,
@@ -43,8 +40,7 @@ const constructorDetails = asyncHandler(async (req, res) => {
     for (let i = 1; i <= 10; i++) {
       const constructorDetail = await Constructor.create({
         constructorName: data.MRData.ConstructorTable.Constructors[i - 1].name,
-        constructorNationality:
-          data.MRData.ConstructorTable.Constructors[i - 1].nationality,
+        constructorNationality:data.MRData.ConstructorTable.Constructors[i - 1].nationality,
       });
       console.log(constructorDetail);
     }
@@ -107,12 +103,7 @@ const getRaceResults = asyncHandler(async (req, res) => {
     const data = await fetchRaceResultsApiData(raceNumber);
     const raceResults = data.MRData.RaceTable.Races[0].Results;
     for (let i = 1; i <= raceResults.length; i++) {
-      const driverId = await Driver.findOne({
-        driverName:
-          raceResults[i - 1].Driver.givenName +
-          " " +
-          raceResults[i - 1].Driver.familyName,
-      });
+      const driverId = await Driver.findOne({driverName:raceResults[i - 1].Driver.givenName +" " +raceResults[i - 1].Driver.familyName});
       const constructorId = await Constructor.findOne({
         constructorName: raceResults[i - 1].Constructor.name,
       });

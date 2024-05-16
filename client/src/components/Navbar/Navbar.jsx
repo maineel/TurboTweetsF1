@@ -1,24 +1,34 @@
 import React from "react";
+import { Link, NavLink } from "react-router-dom";
+import threads from "../Threads/Threads";
 
 function Navbar() {
   return (
     <nav className="w-full bg-black text-[#FF0000] h-auto flex justify-between px-4 py-4 md:px-4 items-center">
       <div className="text-2xl font-bold font-mono underline">
-        <a href="#">TurboTweetsF1</a>
+        <NavLink to="/">TurboTweetsF1</NavLink>
       </div>
       <div>
         <ul className="md:flex hidden font-bold text-xl">
-          <li class="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">Threads</li>
-          <li class="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">Inbox</li>
-          <li class="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">F1 Stats</li>
-          <li class="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">Profile</li>
+          <li className="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">
+            <NavLink to="/threads">Threads</NavLink>
+          </li>
+          <li className="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">
+            <NavLink to="/inbox">Inbox</NavLink>
+          </li>
+          <li className="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">
+            <NavLink to="/f1stats">F1 Stats</NavLink>
+          </li>
+          <li className="mx-16 cursor-pointer hover:underline hover:underline-offset-4 hover:decoration-4">
+            <NavLink to="/profile/profileid">Profile</NavLink>
+          </li>
         </ul>
       </div>
-      <div class="hidden md:block px-1 py-1 cursor-pointer bg-white text-[#FF0000] font-bold rounded hover:bg-[#FF0000] hover:text-black">
-        Login | Signup
+      <div className="hidden md:block px-1 py-1 cursor-pointer bg-white text-[#FF0000] font-bold rounded hover:bg-[#FF0000] hover:text-black">
+        <NavLink to="/login">Login</NavLink>
       </div>
       <div className="md:hidden">
-        <a className="text-4xl" href="#" >{`\u2261`}</a>
+        <NavLink className="text-4xl" to="/" >{`\u2261`}</NavLink>
       </div>
     </nav>
   );

@@ -6,9 +6,6 @@ import Stats from "./components/Stats/Stats";
 function App() {
   return (
     <>
-      <Navbar />  
-      <Stats />
-      <Threads />
     </>
   );
 }

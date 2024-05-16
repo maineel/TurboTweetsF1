@@ -13,9 +13,16 @@
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "autoprefixer": "^10.4.18",
+    "axios": "^1.6.8",
     "headlessui": "^0.0.0",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.1",
+    "redis": "^4.6.13",
+    "sort-by": "^1.2.0",
+    "switch": "^0.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

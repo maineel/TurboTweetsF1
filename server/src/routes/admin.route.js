@@ -8,6 +8,7 @@ nodecron.schedule(
     "* * 12 * * MON", async () => {
         try{
             await updateDriverAndConstructorStandings();
+            console.log("Updated driver and constructor standings");
         } catch (error) {
             console.log(error);
         }
