@@ -24,7 +24,7 @@ function Navbar() {
           </li>
         </ul>
       </div>
-      <div className="hidden md:block px-1 py-1 cursor-pointer bg-white text-[#FF0000] font-bold rounded hover:bg-[#FF0000] hover:text-black">
+      <div className="hidden md:block px-2 py-1 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white">
         <NavLink to="/login">Login</NavLink>
       </div>
       <div className="md:hidden">

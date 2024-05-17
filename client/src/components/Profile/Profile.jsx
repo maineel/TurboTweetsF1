@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 function Profile() {
     const {profileid} = useParams()
   return (
-    <div className='text-white'>Profile: {profileid}</div>
+    <div className='text-white'></div>
   )
 }
 
