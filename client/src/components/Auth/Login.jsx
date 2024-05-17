@@ -87,7 +87,7 @@ function Login() {
             <div>
               <h1>
                 Don't have an account?{" "}
-                <a href="/register" className="text-blue-600 underline">
+                <a href="/auth/register" className="text-blue-600 underline">
                   Signup
                 </a>
               </h1>

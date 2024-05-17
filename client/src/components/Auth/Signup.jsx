@@ -123,7 +123,7 @@ function Signup() {
             <div>
               <h1>
                 Already have an account?{" "}
-                <a href="/login" className="text-blue-600 underline">
+                <a href="/auth/login" className="text-blue-600 underline">
                   Login
                 </a>
               </h1>
