@@ -25,7 +25,7 @@ function Navbar() {
         </ul>
       </div>
       <div className="hidden md:block px-2 py-1 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white">
-        <NavLink to="/login">Login</NavLink>
+        <NavLink to="/auth/login">Login</NavLink>
       </div>
       <div className="md:hidden">
         <NavLink className="text-4xl" to="/" >{`\u2261`}</NavLink>
