@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -87,9 +88,9 @@ function Login() {
             <div>
               <h1>
                 Don't have an account?{" "}
-                <a href="/auth/register" className="text-blue-600 underline">
+                <Link to="/auth/register" className="text-blue-600 underline">
                   Signup
-                </a>
+                </Link>
               </h1>
             </div>
           </form>
