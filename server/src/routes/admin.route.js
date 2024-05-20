@@ -5,7 +5,7 @@ import nodecron from 'node-cron';
 const adminRouter = Router();
 
 nodecron.schedule(
-    "* * 12 * * MON", async () => {
+    "* * 0 * * MON", async () => {
         try{
             await updateDriverAndConstructorStandings();
             console.log("Updated driver and constructor standings");
