@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ function Signup() {
       if (response.status !== 200) {
         throw new Error("Error in registering user");
       }
-      window.location.href = "/login";
+      window.location.href = "/auth/login";
     } catch (err) {
       console.log(err);
     }
@@ -123,9 +124,9 @@ function Signup() {
             <div>
               <h1>
                 Already have an account?{" "}
-                <a href="/auth/login" className="text-blue-600 underline">
+                <Link to="/auth/login" className="text-blue-600 underline">
                   Login
-                </a>
+                </Link>
               </h1>
             </div>
           </form>

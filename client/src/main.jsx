@@ -5,14 +5,15 @@ import Stats from './components/Stats/Stats.jsx';
 import Threads from "./components/Threads/Threads";
 import Profile from './components/Profile/Profile.jsx';
 import { createBrowserRouter, createRoutesFromElements, RouterProvider, Route } from "react-router-dom";
-import Layout from './Layout.jsx';
 import Login from './components/Auth/Login.jsx';
 import Signup from './components/Auth/Signup.jsx';
+import App from './App.jsx';
+import Chat from './components/Chat/Chat.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <App/>,
     children: [
       {
         path: "",
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: "profile/:profileid",
         element: <Profile />,
       },
+      {
+        path: "inbox",
+        element: <Chat />,
+      }
     ],
   },
   {
