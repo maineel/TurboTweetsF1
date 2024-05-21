@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 
-const socket = io.connect("http://localhost:8001");
+const socket = io.connect("https://turbotweetsf1.onrender.com");
 const userName = nanoid(4);
 
 function Chat() {
