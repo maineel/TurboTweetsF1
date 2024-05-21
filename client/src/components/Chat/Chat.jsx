@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 
-const socket = io.connect("https://turbotweetsf1.onrender.com");
+const socket = io.connect("https://turbotweetsf1.onrender.com/api/v1/chat");
 const userName = nanoid(4);
 
 function Chat() {
@@ -22,25 +22,9 @@ function Chat() {
     });
 
   return (
-    <div>
-      {chat.map((payload, index) => {
-        return (
-            <p key={index} className="text-[#ff0000]">{payload.message}: <span>id: {payload.userName}</span></p>
-        )
-      })}
-      <form className="font-xl text-[#FF0000] items-center w-full" onSubmit={sendChat}>
-        <input
-          type="text"
-          name="chat"
-          placeholder="send text"
-          value={message}
-          onChange={(e) => {
-            setMessage(e.target.value);
-          }}
-          className="m-auto"
-        ></input>
-        <button type="submit" className="bg-red-500 text-white mx-2 p-1">Send</button>
-      </form>
+    <div className="w-full flex flex-row h-svh p-4">
+      <div className="w-1/4 bg-white mx-4"></div>
+      <div className="w-3/4 bg-white"></div>
     </div>
   );
 }

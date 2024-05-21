@@ -32,5 +32,7 @@ app.use('/api/v1/constructor', constructorRouter);
 import { tournamentRouter } from './routes/tournament.route.js';
 app.use('/api/v1/tournament', tournamentRouter);
 
+import { chatRouter } from './routes/chat.route.js';
+app.use('/api/v1/chat', chatRouter);
 
 export { app };
