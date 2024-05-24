@@ -1,7 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -17,13 +19,42 @@ function Login() {
           password,
         }
       );
-      if (response.status !== 200) {
+      if (response.status != 200) {
+        toast.error("Error in registering user", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
         throw new Error("Error in registering user");
       }
       localStorage.setItem("accessToken", response.data.accessToken);
-
+      toast.success('User logged in successfully', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
       window.location.href = "/";
     } catch (err) {
+      toast.error("Error in logging in user", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       console.log(err);
     }
   };
@@ -96,6 +127,7 @@ function Login() {
           </form>
         </div>
       </div>
+      <ToastContainer/>
     </>
   );
 }

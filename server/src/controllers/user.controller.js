@@ -57,7 +57,7 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'User with this email does not exist');
     }
 
-    const isPasswordCorrect = await user.isPasswordCorrect(password);
+    const isPasswordCorrect = await User.isPasswordCorrect(password);
     if(!isPasswordCorrect){
         throw new ApiError(401, 'Invalid credentials');
     }

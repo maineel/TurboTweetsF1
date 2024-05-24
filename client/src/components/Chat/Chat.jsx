@@ -2,8 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 
-const socket = io.connect("https://turbotweetsf1.onrender.com/api/v1/chat");
-const userName = nanoid(4);
+// const socket = io.connect("https://turbotweetsf1.onrender.com/api/v1/chat");
+// const userName = nanoid(4);
 
 function Chat() {
   const [message, setMessage] = useState("");
