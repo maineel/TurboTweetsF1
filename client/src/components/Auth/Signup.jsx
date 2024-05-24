@@ -4,12 +4,14 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
+  let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +48,7 @@ function Signup() {
         progress: undefined,
         theme: "colored",
         });
-      window.location.href = "/auth/login";
+      navigate("/auth/login");
     } catch (err) {
       toast.error("Error in registering user", {
         position: "top-right",
