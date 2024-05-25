@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import DriverCard from "./DriverCard";
 import ConstructorCard from "./ConstructorCard";
+import { AuthContext } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function Stats() {
   const [isLoading, setIsLoading] = useState(false);
   const [drivers, setDrivers] = useState([]);
   const [constructors, setConstructors] = useState([]);
+  const { user, setUser, isAuthenticated, setIsAuthenticated } =
+    useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      const driverUrl = "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
-      const constructorUrl = "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
+      const driverUrl =
+        "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
+      const constructorUrl =
+        "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
       try {
         const driverResponse = await fetch(driverUrl);
         const constructorResponse = await fetch(constructorUrl);
@@ -43,6 +49,22 @@ function Stats() {
         className="text-3xl font-bold font-mono text-red-500"
       >
         Loading...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+        className="text-3xl font-bold font-mono text-[#FF0000]"
+      >
+      <Link to="/auth/login" className="mx-2 underline underline-offset-2">LogIn</Link> <span> to view the stats</span>
       </div>
     );
   }

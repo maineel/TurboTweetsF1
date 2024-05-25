@@ -11,7 +11,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

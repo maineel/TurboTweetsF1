@@ -1,15 +1,19 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const { user, setUser, isAuthenticated, setIsAuthenticated } =
+    useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +39,7 @@ function Login() {
         throw new Error("Error in registering user");
       }
       localStorage.setItem("accessToken", response.data.accessToken);
-      toast.success('User logged in successfully', {
+      toast.success("User logged in successfully", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -44,7 +48,9 @@ function Login() {
         draggable: true,
         progress: undefined,
         theme: "colored",
-        });
+      });
+      setUser(response.data.data.user);
+      setIsAuthenticated(true);
       navigate("/");
     } catch (err) {
       toast.error("Error in logging in user", {
@@ -129,7 +135,7 @@ function Login() {
           </form>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }
