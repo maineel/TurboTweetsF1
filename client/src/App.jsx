@@ -7,7 +7,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './components/Auth/Login.jsx';
 import Signup from './components/Auth/Signup.jsx';
 import Chat from './components/Chat/Chat.jsx';
-import Logout from "./components/Auth/Logout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -46,10 +45,6 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: <Signup />,
-      },
-      {
-        path: "logout",
-        element: <Logout />,
       },
     ],
   },
