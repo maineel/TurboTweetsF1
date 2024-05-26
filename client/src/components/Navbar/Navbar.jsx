@@ -32,6 +32,7 @@ function Navbar() {
         });
       }
       localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
       setIsAuthenticated(false);
       setUser(null);
       navigate("/");

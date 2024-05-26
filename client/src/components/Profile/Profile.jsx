@@ -40,21 +40,28 @@ function Profile() {
 
   return (
     <>
-      <div className="w-full flex flex-row h-svh p-3">
-        <div className="w-1/4 bg-white mx-3 text-center">
-          <img src="https://b.thumbs.redditmedia.com/uUkSuTDpTWhU4mW5-OXzca_pVR0RQKHkEq-x_eCQC9I.png" className="rounded-full"></img>
+      <div className="w-full flex flex-row h-screen px-10 text-2xl font-mono font-bold text-[#FF0000]">
+        <div className="w-1/4  mx-5 text-center flex flex-col">
+          <div className="border-b-4 border-[#ff0000]">
+            <img
+              src="https://b.thumbs.redditmedia.com/uUkSuTDpTWhU4mW5-OXzca_pVR0RQKHkEq-x_eCQC9I.png"
+              className="rounded-full mx-auto py-4"
+            ></img>
+          </div>
+          <h1 className="p-2">Username: {user.userName}</h1>
         </div>
-        <div className="w-3/4 bg-white"></div>
-      </div>
-      <div className="text-white">Username: {user.userName}</div>
-      <div className="text-white">Email: {user.email}</div>
-      <div className="text-white">FullName: {user.fullName}</div>
-      <div className="text-white">Wallet: {user.wallet}</div>
-      <div className="text-white">
-        Created: {createDateString} | {createTimeString}
-      </div>
-      <div className="text-white">
-        Last Login: {updateDateString} | {updateTimeString}
+        <div className="border-r-2 border-[#ff0000]">
+
+        </div>
+        <div className="w-3/4 p-5 ">
+          <div className="p-4">Email: {user.email}</div>
+          <div className="p-4">FullName: {user.fullName}</div>
+          <div className="p-4">Wallet: {user.wallet}</div>
+          <div className="p-4">Account Created Date: {createDateString}</div>
+          <div className="p-4">Account Created Time: {createTimeString}</div>
+          <div className="p-4">Last Login Date: {updateDateString}</div>
+          <div className="p-4">Last Login Time: {updateTimeString}</div>
+        </div>
       </div>
     </>
   );
