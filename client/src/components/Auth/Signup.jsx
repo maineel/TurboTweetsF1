@@ -28,7 +28,7 @@ function Signup() {
       if (response.status != 200) {
         toast.error("Error in registering user", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -40,19 +40,21 @@ function Signup() {
       }
       toast.success('User registered successfully', {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
         theme: "colored",
-        });
-      navigate("/auth/login");
+        onClose: () => {
+          navigate("/auth/login");
+        }
+      });
     } catch (err) {
       toast.error("Error in registering user", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

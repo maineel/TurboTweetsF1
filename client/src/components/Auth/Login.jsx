@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,6 +15,14 @@ function Login() {
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -28,7 +36,7 @@ function Login() {
       if (response.status != 200) {
         toast.error("Error in registering user", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -38,24 +46,27 @@ function Login() {
         });
         throw new Error("Error in registering user");
       }
-      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("accessToken", response.data.data.accessToken);
       toast.success("User logged in successfully", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
         theme: "colored",
+        onClose: () => {
+          localStorage.setItem("user", JSON.stringify(response.data.data.user));
+          setUser(response.data.data.user);
+          setIsAuthenticated(true);
+          navigate("/");
+        },
       });
-      setUser(response.data.data.user);
-      setIsAuthenticated(true);
-      navigate("/");
     } catch (err) {
       toast.error("Error in logging in user", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
