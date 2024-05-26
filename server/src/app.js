@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 
 const app = express();
 // "http://localhost:5173"
-app.use(cors({origin: "https://turbotweetsf1.netlify.app", credentials: true}));
+app.use(cors({origin: ["http://localhost:5173", "https://turbotweetsf1.netlify.app"], credentials: true}));
 app.use(express.json({limit: "16kb"})); // to limit the size of data which express should accept
 app.use(express.urlencoded({extended: true, limit: "16kb"})) // with extended flag, we will get the nested data at deep level
 app.use(express.static("public")); // it is a addres folder, where we will keep files which we want to keep in public

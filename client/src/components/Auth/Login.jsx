@@ -46,7 +46,6 @@ function Login() {
         });
         throw new Error("Error in registering user");
       }
-      localStorage.setItem("accessToken", response.data.data.accessToken);
       toast.success("User logged in successfully", {
         position: "top-right",
         autoClose: 2000,
@@ -57,6 +56,7 @@ function Login() {
         progress: undefined,
         theme: "colored",
         onClose: () => {
+          localStorage.setItem("accessToken", response.data.data.accessToken);
           localStorage.setItem("user", JSON.stringify(response.data.data.user));
           setUser(response.data.data.user);
           setIsAuthenticated(true);
