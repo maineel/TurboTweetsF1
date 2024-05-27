@@ -29,6 +29,7 @@ function Threads() {
         }
       }
       setData(posts_array.flat().sort((a, b) => b.ups - a.ups));
+      setIsLoading(false);
     };
 
     fetchData();
@@ -43,7 +44,6 @@ function Threads() {
         const response = await fetch(url);
         const result = await response.json();
         setAccounts(result.data.children.map((child) => child.data));
-        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
