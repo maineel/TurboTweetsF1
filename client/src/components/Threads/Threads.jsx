@@ -80,7 +80,7 @@ function Threads() {
                 .map((item, index) => <Card key={index} data={item} />)}
             <div>
               {isLoading ? null : (
-                <>
+                <div className="flex flex-row justify-between">
                   <button
                     className="md:block px-2 py-1 m-auto mb-4 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
                     onClick={() => setCurrentPage(currentPage - 1)}
@@ -98,7 +98,7 @@ function Threads() {
                   >
                     Next Page
                   </button>
-                </>
+                </div>
               )}
             </div>
           </div>
