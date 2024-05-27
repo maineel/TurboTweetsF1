@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import Accounts from "./Accounts";
+import Footer from "../Footer/Footer";
 
 function Threads() {
   const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +53,7 @@ function Threads() {
   }, []);
 
   return (
-    <div className="w-full h-screen bg-black">
+    <div className="w-full h-full bg-black">
       {isLoading ? (
         <div
           style={{
@@ -82,14 +83,14 @@ function Threads() {
               {isLoading ? null : (
                 <div className="flex flex-row justify-between">
                   <button
-                    className="md:block px-2 py-1 mb-4 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
+                    className="md:block px-2 py-1 my-4 mx-4 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
                     onClick={() => setCurrentPage(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                     Previous
                   </button>
                   <button
-                    className="md:block px-2 py-1 mb-4 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
+                    className="md:block px-2 py-1 my-4 mx-3 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
                     onClick={() => setCurrentPage(currentPage + 1)}
                     disabled={
                       currentPage ===
@@ -114,6 +115,7 @@ function Threads() {
           </div>
         </div>
       )}
+      {isLoading ? null : <Footer />}
     </div>
   );
 }
