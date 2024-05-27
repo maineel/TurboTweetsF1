@@ -23,5 +23,6 @@ adminRouter.route("/getRaceDetails").post(getRaceDetails);
 adminRouter.route("/updateRaceData").post(getRaceResults);
 adminRouter.route("/getDriverDetails").post(driverDetails);
 adminRouter.route("/getConstructorDetails").post(constructorDetails);
+adminRouter.route("/updateDriverAndConstructorStandings").get(updateDriverAndConstructorStandings);
 
 export { adminRouter };

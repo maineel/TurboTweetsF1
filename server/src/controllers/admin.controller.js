@@ -156,7 +156,7 @@ const fetchConstructorStandings = async () => {
   return data;
 };
 
-const updateDriverAndConstructorStandings = async () => {
+const updateDriverAndConstructorStandings = async (req,res) => {
   const data = await fetchDriverStandings();
   const constructorData = await fetchConstructorStandings();
 
@@ -193,6 +193,8 @@ const updateDriverAndConstructorStandings = async () => {
       }
     );
   }
+
+  return res.status(200).json({ message: "Data updated successfully" });
 };
 
 export {
