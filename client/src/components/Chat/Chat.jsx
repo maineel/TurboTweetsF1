@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useState, useEffect, useContext } from "react";
-import { nanoid } from "nanoid";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 
-// const socket = io.connect("https://turbotweetsf1.onrender.com/api/v1/chat");
-// const userName = nanoid(4);
 
 function Chat() {
+  const socket = useMemo(() => io.connect("localhost:8001"), []);
+
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
+  const userName = user?._id;
+
   const sendChat = (e) => {
     e.preventDefault();
     socket.emit("chat", { message, userName });

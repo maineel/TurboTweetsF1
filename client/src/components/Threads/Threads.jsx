@@ -4,6 +4,8 @@ import Accounts from "./Accounts";
 
 function Threads() {
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(15);
 
   const [data, setData] = useState(null);
   useEffect(() => {
@@ -70,7 +72,35 @@ function Threads() {
               Top Posts: Formula 1
             </h1>
             {data &&
-              data.map((item, index) => <Card key={index} data={item} />)}
+              data
+                .slice(
+                  (currentPage - 1) * itemsPerPage,
+                  currentPage * itemsPerPage
+                )
+                .map((item, index) => <Card key={index} data={item} />)}
+            <div>
+              {isLoading ? null : (
+                <>
+                  <button
+                    className="md:block px-2 py-1 m-auto mb-4 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className="md:block px-2 py-1 m-auto mb-4 cursor-pointer bg-[#FF0000] text-black font-bold rounded hover:bg-[#FF0000] hover:text-white flex-end"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    disabled={
+                      currentPage ===
+                      Math.ceil((data ? data.length : 0) / itemsPerPage)
+                    }
+                  >
+                    Next Page
+                  </button>
+                </>
+              )}
+            </div>
           </div>
           <div className="bg-white m-2 h-full"></div>
           <div className=" w-1/4 flex flex-col m-2">

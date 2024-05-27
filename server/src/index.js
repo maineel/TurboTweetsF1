@@ -12,15 +12,16 @@ connectDB()
     const io = new Server(server, {
       cors: {
         origin: "*",
+        methods: ["GET", "POST"],
+        credentials: true,
       },
     });
 
     io.on("connection", (socket) => {
-
+      console.log("Socket Connected: ", socket.id);
       socket.on("chat",(payload) => {
         io.emit("chat", payload);
-      })
-
+      })  
     });
 
     server.listen(process.env.SOCKET_PORT || 8080, () => {
