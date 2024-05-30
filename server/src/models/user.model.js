@@ -43,7 +43,15 @@ const userSchema = new Schema({
             "Drivers": [],
             "Constructors": []
         }
-    ]
+    ],
+    avatar:{
+        public_id:{
+            type: String,
+        },
+        url:{
+            type: String,
+        }
+    }
 }, {timestamps: true});
 
 userSchema.pre('save', async function(next){
