@@ -45,12 +45,7 @@ const userSchema = new Schema({
         }
     ],
     avatar:{
-        public_id:{
-            type: String,
-        },
-        url:{
-            type: String,
-        }
+        type: String,
     }
 }, {timestamps: true});
 
