@@ -13,14 +13,14 @@ function Profile() {
   );
 
   useEffect(async () => {
-    const response = await axios.get(
-      "http://turbotweetsf1.onrender.com/api/v1/users/getAvatar",
+    const response = await axios.post(
+      "https://turbotweetsf1.onrender.com/api/v1/users/getAvatar",
       {
         userid: user._id,
       }
     );
     console.log(response);
-    setAvatar(response.data.data);
+    // setAvatar(response.data.data);
   }, []);
 
   if (!isAuthenticated) {

@@ -11,7 +11,7 @@ userRouter.route('/logout').post(logoutUser)
 userRouter.route('/refresh').post(refreshAccessToken);
 userRouter.route('/user').get(verifyJWT, getUser);
 userRouter.route('/uploadAvatar').post(upload.single("avatar"), uploadAvatar);
-userRouter.route('/getAvatar').get(getAvatar);
+userRouter.route('/getAvatar').post(getAvatar);
 userRouter.route('/createTeam').post(createTeam);
 
 export { userRouter };
