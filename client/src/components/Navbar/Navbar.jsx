@@ -18,7 +18,6 @@ function Navbar() {
         { user },
         { withCredentials: true }
       );
-      console.log(response);
       if (response.status != 200) {
         toast.error("Error in logging out user", {
           position: "top-right",

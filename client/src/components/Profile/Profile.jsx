@@ -8,21 +8,6 @@ function Profile() {
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
 
-  const [avatar, setAvatar] = useState(
-    "https://res.cloudinary.com/dcthtlmm0/image/upload/v1717084604/kr9o4wuzt8l82j3avuwv.png"
-  );
-
-  useEffect(async () => {
-    const response = await axios.post(
-      "https://turbotweetsf1.onrender.com/api/v1/users/getAvatar",
-      {
-        userid: user._id,
-      }
-    );
-    console.log(response);
-    // setAvatar(response.data.data);
-  }, []);
-
   if (!isAuthenticated) {
     return (
       <div
@@ -59,7 +44,7 @@ function Profile() {
       <div className="w-full flex flex-row h-screen px-10 text-2xl font-mono font-bold text-[#FF0000]">
         <div className="w-1/4  mx-5 text-center flex flex-col">
           <div className="border-b-4 border-[#ff0000]">
-            <img src={user.avatar} className="rounded-full mx-auto py-4"></img>
+            <img src={user.avatar} className="rounded-full mx-auto py-4 w-80 h-80"></img>
           </div>
           <h1 className="p-2">Username: {user.userName}</h1>
         </div>

@@ -50,10 +50,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const uploadAvatar = asyncHandler(async (req, res) => {
   const { userid } = req.body;
-  // console.log(req.file);
   const avatarLocalPath = req.file?.path;
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  // console.log(avatar);
   
   const fetchedUser = await User.findById(userid);  
   fetchedUser.avatar = avatar.url;
