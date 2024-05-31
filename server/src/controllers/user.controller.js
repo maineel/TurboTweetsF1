@@ -53,10 +53,10 @@ const uploadAvatar = asyncHandler(async (req, res) => {
   // console.log(req.file);
   const avatarLocalPath = req.file?.path;
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  console.log(avatar);
+  // console.log(avatar);
   
   const fetchedUser = await User.findById(userid);  
-  fetchedUser.avatar = avatar;
+  fetchedUser.avatar = avatar.url;
 
   await fetchedUser.save();
 
