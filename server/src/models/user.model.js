@@ -46,6 +46,7 @@ const userSchema = new Schema({
     ],
     avatar:{
         type: String,
+        default: "https://res.cloudinary.com/dcthtlmm0/image/upload/v1717084604/kr9o4wuzt8l82j3avuwv.png"
     }
 }, {timestamps: true});
 

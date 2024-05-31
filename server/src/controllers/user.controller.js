@@ -4,6 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { Driver } from "../models/driver.model.js";
 import { Constructor } from "../models/constructor.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {v2 as cloudinary} from 'cloudinary';
 
 const generatAccessAndRefreshTokens = async (user) => {
   const accessToken = user.generateAccessToken();
@@ -44,6 +46,34 @@ const registerUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
+});
+
+const uploadAvatar = asyncHandler(async (req, res) => {
+  const { userid } = req.body;
+  // console.log(req.file);
+  const avatarLocalPath = req.file?.path;
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  console.log(avatar);
+  
+  const fetchedUser = await User.findById(userid);  
+  fetchedUser.avatar = avatar;
+
+  await fetchedUser.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, avatar, "Avatar uploaded successfully"));
+});
+
+const getAvatar = asyncHandler(async (req, res) => {
+  const { userid } = req.body;
+  const fetchedUser = await User.findById(userid).select("avatar");
+  if (!fetchedUser) {
+    throw new ApiError(404, "User not found");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, fetchedUser.avatar, "Avatar fetched successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -231,4 +261,6 @@ export {
   refreshAccessToken,
   getUser,
   createTeam,
+  uploadAvatar,
+  getAvatar
 };
