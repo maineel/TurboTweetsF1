@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 
 function Chat() {
-  const socket = useMemo(() => io.connect("localhost:8001"), []);
+  // const socket = useMemo(() => io.connect("localhost:8001"), []);
 
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
@@ -13,17 +13,17 @@ function Chat() {
     useContext(AuthContext);
   const userName = user?._id;
 
-  const sendChat = (e) => {
-    e.preventDefault();
-    socket.emit("chat", { message, userName });
-    setMessage("");
-  };
+  // const sendChat = (e) => {
+  //   e.preventDefault();
+  //   socket.emit("chat", { message, userName });
+  //   setMessage("");
+  // };
 
-  useEffect(() => {
-    socket.on("chat", (payload) => {
-      setChat([...chat, payload]);
-    });
-  });
+  // useEffect(() => {
+  //   socket.on("chat", (payload) => {
+  //     setChat([...chat, payload]);
+  //   });
+  // });
 
   if (!isAuthenticated) {
     return (

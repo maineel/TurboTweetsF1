@@ -5,7 +5,6 @@ import { User } from "../models/user.model.js";
 import { Driver } from "../models/driver.model.js";
 import { Constructor } from "../models/constructor.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import {v2 as cloudinary} from 'cloudinary';
 
 const generatAccessAndRefreshTokens = async (user) => {
   const accessToken = user.generateAccessToken();
@@ -52,15 +51,14 @@ const uploadAvatar = asyncHandler(async (req, res) => {
   const { userid } = req.body;
   const avatarLocalPath = req.file?.path;
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  
-  const fetchedUser = await User.findById(userid);  
+  const fetchedUser = await User.findById(userid);
   fetchedUser.avatar = avatar.url;
 
   await fetchedUser.save();
 
   return res
     .status(200)
-    .json(new ApiResponse(200, avatar, "Avatar uploaded successfully"));
+    .json(new ApiResponse(200, fetchedUser, "Avatar uploaded successfully"));
 });
 
 const getAvatar = asyncHandler(async (req, res) => {
@@ -71,7 +69,9 @@ const getAvatar = asyncHandler(async (req, res) => {
   }
   return res
     .status(200)
-    .json(new ApiResponse(200, fetchedUser.avatar, "Avatar fetched successfully"));
+    .json(
+      new ApiResponse(200, fetchedUser.avatar, "Avatar fetched successfully")
+    );
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -252,6 +252,24 @@ const createTeam = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, team, "Team created successfully"));
 });
 
+const editProfileInfo = asyncHandler(async (req, res) => {
+  const { userid, newFullName, newPassword } = req.body;
+  const user = await User.findById(userid);
+
+  if (newFullName !== "") {
+    user.fullName = newFullName;
+  }
+  if (newPassword !== "") {
+    user.password = newPassword;
+  }
+
+  await user.save();
+
+  return res
+  .status(201)
+  .json( new ApiResponse(201, user, "User details updated successfully"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -260,5 +278,6 @@ export {
   getUser,
   createTeam,
   uploadAvatar,
-  getAvatar
+  getAvatar,
+  editProfileInfo
 };

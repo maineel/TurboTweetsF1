@@ -8,25 +8,25 @@ dotenv.config({ path: "../.env" });
 
 connectDB()
   .then(() => {
-    const server = createServer(app);
-    const io = new Server(server, {
-      cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-        credentials: true,
-      },
-    });
+    // const server = createServer(app);
+    // const io = new Server(server, {
+    //   cors: {
+    //     origin: "*",
+    //     methods: ["GET", "POST"],
+    //     credentials: true,
+    //   },
+    // });
 
-    io.on("connection", (socket) => {
-      console.log("Socket Connected: ", socket.id);
-      socket.on("chat",(payload) => {
-        io.emit("chat", payload);
-      })  
-    });
+    // io.on("connection", (socket) => {
+    //   console.log("Socket Connected: ", socket.id);
+    //   socket.on("chat",(payload) => {
+    //     io.emit("chat", payload);
+    //   })  
+    // });
 
-    server.listen(process.env.SOCKET_PORT || 8080, () => {
-      console.log("Scoket Server is running on Port: ", process.env.SOCKET_PORT);
-    });
+    // server.listen(process.env.SOCKET_PORT || 8080, () => {
+    //   console.log("Scoket Server is running on Port: ", process.env.SOCKET_PORT);
+    // });
 
     app.listen(process.env.PORT || 8080, () => {
       console.log("App Server is running on Port: ", process.env.PORT);

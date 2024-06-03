@@ -3,90 +3,122 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-const getChatPartners = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
-  const chats = await Chat.find({
-    $or: [{ sender: userId }, { receiver: userId }],
-  }).sort({ timestamp: -1 });
+const emitEvent = (req, event, users, data) => {
+  console.log("Emitting event", event);
+};
 
-  if (!chats) {
-    throw new ApiError(404, "No chats found");
+const newGroupChat = asyncHandler(async (req, res) => {
+  const { name, members } = req.body;
+
+  if (members.length < 2) {
+    throw new ApiError(400, "Group chat must have at least 3 members");
   }
 
-  const chatPartners = chats.map((chat) =>
-    chat.sender.toString() === userId ? chat.receiver : chat.sender
+  const allMembers = [...members, req.user];
+  await Chat.create({
+    name,
+    groupChat: true,
+    creator: req.user,
+    members: allMembers,
+  });
+
+  emitEvent(req, "newGroupChat", allMembers, { name });
+});
+
+const getMyChats = asyncHandler(async (req, res) => {
+  const chats = await Chat.find({ members: req.user }).populate(
+    "members",
+    "name avatar"
   );
 
-  const uniqueChatPartners = [...new Set(chatPartners)];
+  const transformedChats = chats.map(({ _id, name, members, groupChat }) => {
+    return {
+      _id,
+      name: groupChat
+        ? name
+        : members.find((member) => member._id.toString() !== req.user).name,
+      groupChat,
+      members,
+      avatar: groupChat
+        ? members.slice(0, 3).map(({ avatar }) => avatar.url)
+        : [
+            members.find((member) => member._id.toString() !== req.user).avatar
+              .url,
+          ],
+    };
+  });
 
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        "Chat Partners fetched successfully",
-        uniqueChatPartners
+        transformedChats,
+        "Chat partners fetched successfully"
       )
     );
 });
 
-const getChat = asyncHandler(async (req, res) => {
-  const { senderId, receiverId } = req.params;
-  const chats = await Chat.find({
-    $or: [
-      { sender: senderId, receiver: receiverId },
-      { sender: receiverId, receiver: senderId },
-    ],
-  }).sort({ timestamp: 1 });
+const getMyGroups = asyncHandler(async (req, res) => {
+  const chats = await Chat.find({ members: req.user, groupChat: true }).populate(
+    "members",
+    "name avatar"
+  );
 
-  if (!chats) {
-    throw new ApiError(404, "No chats found");
-  }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Chat fetched successfully", chats));
-});
-
-const createChat = asyncHandler(async (req, res) => {
-  const { sender, receiver, message } = req.body;
-  const chat = new Chat({
-    sender,
-    receiver,
-    message,
-    timestamp: Date.now(),
+  const groups = chats.map(({ _id, name, members }) => {
+    return {
+      _id,
+      name,
+      members,
+      avatar: members.slice(0, 3).map(({ avatar }) => avatar.url),
+    };
   });
-  const savedChat = await chat.save();
+
   return res
-    .status(201)
-    .json(new ApiResponse(201, "Chat created successfully", savedChat));
+    .status(200)
+    .json(
+      new ApiResponse(
+        200, 
+        groups,
+        "Group chats fetched successfully"
+      )
+    );
 });
 
-const updateChat = asyncHandler(async (req, res) => {
-  const { chatId } = req.params;
-  const { message } = req.body;
+const addMember = asyncHandler(async (req, res) => {
+  const { chatId, members } = req.body;
+
   const chat = await Chat.findById(chatId);
-  if (!chat) {
+
+  if(!chat) {
     throw new ApiError(404, "Chat not found");
   }
 
-  chat.message = message;
+  if(!chat.groupChat) {
+    throw new ApiError(400, "Cannot add members to a personal chat");
+  }
+
+  if(chat.creator.toString() !== req.user) {
+    throw new ApiError(403, "Only the creator can add members to the group");
+  }
+
+  const newMembersPromise = members.map((i) => User.findById(i, "name"));
+
+  const allNewMembers = await Promise.all(newMembersPromise);
+
+  chat.members.push(...allNewMembers.map((i) => i._id));
+
   await chat.save();
+
   return res
     .status(200)
-    .json(new ApiResponse(200, "Chat updated successfully", chat));
+    .json(
+      new ApiResponse(
+        200,
+        null,
+        "Member added successfully"
+      )
+    );
 });
 
-const deleteChat = asyncHandler(async (req, res) => {
-  const { chatId } = req.params;
-  const chat = await Chat.findById(chatId);
-  if (!chat) {
-    throw new ApiError(404, "Chat not found");
-  }
-  await chat.remove();
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Chat deleted successfully", chat));
-});
-
-export { getChatPartners, getChat, createChat, updateChat, deleteChat };
+export { newGroupChat, getMyChats, getMyGroups, addMember };

@@ -11,31 +11,42 @@ function Stats() {
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const driverUrl =
-        "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
-      const constructorUrl =
-        "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
-      try {
-        const driverResponse = await fetch(driverUrl);
-        const constructorResponse = await fetch(constructorUrl);
-        if (!driverResponse.ok || !constructorResponse.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+    useEffect(() => {
+      const fetchData = async () => {
+        const driverUrl = "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
+        const constructorUrl = "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
+    
+        const localDrivers = sessionStorage.getItem('drivers');
+        const localConstructors = sessionStorage.getItem('constructors');
+    
+        if (localDrivers && localConstructors) {
+          setDrivers(JSON.parse(localDrivers));
+          setConstructors(JSON.parse(localConstructors));
+        } else {
+          try {
+            const driverResponse = await fetch(driverUrl);
+            const constructorResponse = await fetch(constructorUrl);
+    
+            if (!driverResponse.ok || !constructorResponse.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const driverData = await driverResponse.json();
+            const constructorData = await constructorResponse.json();
+    
+            sessionStorage.setItem('drivers', JSON.stringify(driverData));
+            sessionStorage.setItem('constructors', JSON.stringify(constructorData));
+    
+            setDrivers(driverData);
+            setConstructors(constructorData);
+          } catch (error) {
+            console.error('Failed to fetch data:', error);
+          }
         }
-        const driverResult = await driverResponse.json();
-        const constructorResult = await constructorResponse.json();
-
-        setDrivers(driverResult);
-        setConstructors(constructorResult);
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+      };
+    
+      fetchData();
+    }, []);
 
   if (isLoading) {
     return (

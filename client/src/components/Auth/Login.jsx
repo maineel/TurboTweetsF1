@@ -33,6 +33,7 @@ function Login() {
           password,
         }
       );
+      console.log(response);
       if (response.status != 200) {
         toast.error("Error in registering user", {
           position: "top-right",
