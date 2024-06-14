@@ -13,7 +13,6 @@ const chatSchema = new Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     members: [
       {
@@ -21,6 +20,16 @@ const chatSchema = new Schema(
         ref: "User",
       },
     ],
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
+    avatar: {
+      type: String,
+      default: "https://res.cloudinary.com/dcthtlmm0/image/upload/v1718109871/x3htmb9lm2trksgzjzgl.png",
+    },
   },
   { timestamps: true }
 );

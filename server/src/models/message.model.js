@@ -2,22 +2,21 @@ import mongoose, { Schema } from "mongoose";
 
 const messageSchema = new Schema(
   {
-    chat: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Chat",
-        required: true,
-    },
-    sender: {
+    sender:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+    },
+    chat:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Chat",
     },
     content:{
-        type: String,
+      type: String,
+      required: true,
     },
-    attachments:{
-        type: String,
-    },
+    attachements:{
+      type: String,
+    }
   },
   { timestamps: true }
 );

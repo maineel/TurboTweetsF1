@@ -2,28 +2,63 @@ import React, { useMemo } from "react";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-
+import Contactswindow from "./Contactswindow.jsx";
+import Messagewindow from "./Messagewindow.jsx";
+import axios from "axios";
 
 function Chat() {
-  // const socket = useMemo(() => io.connect("localhost:8001"), []);
+  const socket = useMemo(
+    () =>
+      io.connect("localhost:8001", {
+        withCredentials: true,
+      }),
+    []
+  );
 
-  const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
+  const [chats, setChats] = useState([{}]);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [chat, setChat] = useState(null);
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
-  const userName = user?._id;
+  useEffect(() => {
+    const fetchChats = async () => {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/chat/getMyChats/${user._id}`
+      );
+      setChats(response.data.data);
+    };
 
-  // const sendChat = (e) => {
-  //   e.preventDefault();
-  //   socket.emit("chat", { message, userName });
-  //   setMessage("");
-  // };
+    fetchChats();
+  },[]);
 
-  // useEffect(() => {
-  //   socket.on("chat", (payload) => {
-  //     setChat([...chat, payload]);
-  //   });
-  // });
+  useEffect(() => {
+    socket.on("message", (message) => {
+      return () => {
+        socket.off("message");
+      };
+    });
+  }, [socket]);
+
+  const sendMessage = async (message) => {
+    socket.emit("message", message);
+    const fetchedChat = await axios.post(
+      "http://localhost:8000/api/v1/chat/personalChat",
+      {
+        recipient: selectedChat,
+      }
+    );
+
+    const updatedChat = await axios.post(
+      "http://localhost:8000/api/v1/chat/addMessageToChat",
+      {
+        chatId: fetchedChat.data._id,
+        content: message,
+      }
+    )
+
+    setMessages(updatedChat.data.messages);
+  };
 
   if (!isAuthenticated) {
     return (
@@ -45,9 +80,21 @@ function Chat() {
   }
 
   return (
-    <div className="w-full flex flex-row h-svh p-4">
-      <div className="w-1/4 bg-white mx-4"></div>
-      <div className="w-3/4 bg-white"></div>
+    <div className="flex h-screen">
+      <div className="w-1/4 border-r">
+        <Contactswindow 
+          chats={chats} 
+          selectChat={setSelectedChat} 
+        />
+      </div>
+      <div className="w-3/4">
+        <Messagewindow
+          chat={chat}
+          sendMessage={sendMessage}
+          messages={messages}
+          user={user}
+        />
+      </div>
     </div>
   );
 }
