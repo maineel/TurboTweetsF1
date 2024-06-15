@@ -18,9 +18,11 @@ function Chat() {
   const [chats, setChats] = useState([{}]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [sendMessage, setSendMessage] = useState(null);
   const [chat, setChat] = useState(null);
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
+
   useEffect(() => {
     const fetchChats = async () => {
       const response = await axios.get(
@@ -28,9 +30,8 @@ function Chat() {
       );
       setChats(response.data.data);
     };
-
     fetchChats();
-  },[]);
+  }, []);
 
   useEffect(() => {
     socket.on("message", (message) => {
@@ -40,25 +41,46 @@ function Chat() {
     });
   }, [socket]);
 
-  const sendMessage = async (message) => {
-    socket.emit("message", message);
-    const fetchedChat = await axios.post(
-      "http://localhost:8000/api/v1/chat/personalChat",
-      {
-        recipient: selectedChat,
-      }
-    );
+  useEffect(() => {
+    const fetchChatAndDefineSendMessage = async () => {
+      if (selectedChat) {
+        const fetchedChat = await axios.post(
+          "http://localhost:8000/api/v1/chat/personalChat",
+          {
+            recipient: selectedChat,
+            user: user,
+          }
+        );
+        setChat(fetchedChat.data.message)
+        const ChatId = fetchedChat.data.message._id;
 
-    const updatedChat = await axios.post(
-      "http://localhost:8000/api/v1/chat/addMessageToChat",
-      {
-        chatId: fetchedChat.data._id,
-        content: message,
-      }
-    )
+        const fetchedMessages = await axios.get(`http://localhost:8000/api/v1/message/getMessagesFromId/${ChatId}`);
+        
+        const chatMessages = []
+        for(let i = 0; i < fetchedMessages.data.data.length; i++) {
+          chatMessages.push(fetchedMessages.data.data[i].content);
+        }
+        setMessages(chatMessages);
 
-    setMessages(updatedChat.data.messages);
-  };
+        const newSendMessage = async (message) => {
+          socket.emit("message", message);
+
+          const updatedChat = await axios.post(
+            "http://localhost:8000/api/v1/chat/addMessageToChat",
+            {
+              chatId: fetchedChat.data._id,
+              content: message,
+            }
+          );
+          setMessages(updatedChat.data.messages);
+        };
+
+        setSendMessage(() => newSendMessage);
+      }
+    };
+
+    fetchChatAndDefineSendMessage();
+  }, [selectedChat]);
 
   if (!isAuthenticated) {
     return (
@@ -80,12 +102,9 @@ function Chat() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-[#2e2e2e]">
       <div className="w-1/4 border-r">
-        <Contactswindow 
-          chats={chats} 
-          selectChat={setSelectedChat} 
-        />
+        <Contactswindow chats={chats} selectChat={setSelectedChat} />
       </div>
       <div className="w-3/4">
         <Messagewindow

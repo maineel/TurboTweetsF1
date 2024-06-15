@@ -2,13 +2,17 @@ import React from 'react';
 
 function Contactswindow ({ chats, selectChat }) {
   
+  const handleChatSelection = (chatName) => {
+    selectChat(chatName);
+  }
+
   return (
     <div className="flex flex-col w-full h-full overflow-y-auto">
       {chats.map(chat => (
         <div
           key={chat._id}
           className="flex items-center p-4 border-b cursor-pointer hover:bg-gray-200"
-          onClick={() => selectChat(chat.userName)}
+          onClick={() => handleChatSelection(chat.name)}
         >
           <img
             src={chat.avatar}

@@ -91,4 +91,20 @@ const searchMessage = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, messages, "Messages retrieved successfully"));
 });
 
-export { uploadAttachement, newMessage, editMessage, searchMessage };
+const getMessagesFromId = asyncHandler(async (req, res) => {
+    const { chatId } = req.params;
+
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat) {
+        throw new ApiError(404, "Chat not found");
+    }
+
+    const messages = await Message.find({ chat: chatId });
+    
+    return res
+        .status(200)
+        .json(new ApiResponse(200, messages, "Messages retrieved successfully"));
+});
+
+export { uploadAttachement, newMessage, editMessage, searchMessage, getMessagesFromId };

@@ -67,23 +67,24 @@ const addMembers = asyncHandler(async (req, res) => {
 });
 
 const personalChat = asyncHandler(async (req, res) => {
-  const { recipient } = req.body;
+  
+  const { recipient, user } = req.body;
 
   const recipientUser = await User.findOne({ userName: recipient });
 
   const chatExists = await Chat.findOne({
-    members: [req.user._id, recipientUser._id],
+    members: { $all: [user._id, recipientUser._id], $size: 2 },
   });
-
+  
   if (chatExists) {
-    throw new ApiError(400, chatExists, "Chat already exists");
+    throw new ApiError(200, chatExists, "Chat already exists");
   }
 
   const chat = await Chat.create({
     name: recipientUser.userName,
     groupChat: false,
-    creator: req.user._id,
-    members: [req.user._id, recipientUser._id],
+    creator: user._id,
+    members: [user._id, recipientUser._id],
     avatar: recipientUser.avatar.url,
   });
 
@@ -115,10 +116,10 @@ const searchChat = asyncHandler(async (req, res) => {
 });
 
 const addMessageToChat = asyncHandler(async (req, res) => {
-  const { chatId, content } = req.body;
-
+  const { userId, chatId, content } = req.body;
+  
   const message = await Message.create({
-    sender: req.user._id,
+    sender: userId,
     chat: chatId,
     content,
   });

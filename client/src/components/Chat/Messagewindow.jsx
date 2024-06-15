@@ -1,9 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 function Messagewindow({ chat, sendMessage, messages, user }) {
-
   const [message, setMessage] = useState("");
-
+  console.log(messages);
   if (!chat) {
     return (
       <div className="flex items-center justify-center w-full h-full text-gray-500">
@@ -11,7 +10,6 @@ function Messagewindow({ chat, sendMessage, messages, user }) {
       </div>
     );
   }
-  
   return (
     <div className="flex flex-col w-full h-full">
       <div className="flex items-center p-4 border-b">
@@ -26,17 +24,25 @@ function Messagewindow({ chat, sendMessage, messages, user }) {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`mb-4 p-2 rounded-lg max-w-xs ${
-              msg.sender === user._id ? "bg-green-200 self-end" : "bg-gray-200 self-start"
-            }`}
+            className="mb-4 p-2 rounded-lg max-w-xs bg-gray-200 self-start"
           >
-            {msg.content}
+            {msg}
           </div>
         ))}
       </div>
       <form className="bg-white h-auto rounded-md flex flex-row justify-between m-2 p-2">
-        <input type="text" placeholder="Enter message" className="w-full p-2 mr-2" onChange={(e) => setMessage(e.target.value)}></input>
-        <button className="bg-blue-600 p-2 rounded-md" onClick={() => sendMessage(message)}>Send</button>
+        <input
+          type="text"
+          placeholder="Enter message"
+          className="w-full p-2 mr-2"
+          onChange={(e) => setMessage(e.target.value)}
+        ></input>
+        <button
+          className="bg-blue-600 p-2 rounded-md"
+          onClick={() => sendMessage(message)}
+        >
+          Send
+        </button>
       </form>
     </div>
   );

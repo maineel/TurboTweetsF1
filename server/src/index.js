@@ -17,10 +17,10 @@ connectDB()
       },
     });
 
-    io.on("connection", (socket) => {
-      console.log("Socket connected: ", socket.id);
+    // io.on("connection", (socket) => {
+    //   console.log("Socket connected: ", socket.id);
       
-    });
+    // });
 
     server.listen(process.env.SOCKET_PORT || 8081, () => {
       console.log("Scoket Server is running on Port: ", process.env.SOCKET_PORT);
