@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function Messagewindow({ chat, sendMessage, messages, user }) {
   const [message, setMessage] = useState("");
-  console.log(messages);
+  
   if (!chat) {
     return (
       <div className="flex items-center justify-center w-full h-full text-gray-500">

@@ -127,7 +127,6 @@ const addMessageToChat = asyncHandler(async (req, res) => {
   const chat = await Chat.findById(chatId);
   chat.messages.push(message._id);
   await chat.save();
-
   emitEvent(req, "newMessage", chat.members, { chatId, message });
 
   return res

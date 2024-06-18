@@ -14,7 +14,7 @@ function Chat() {
       }),
     []
   );
-
+  const [searchChat, setSearchChat] = useState("");
   const [chats, setChats] = useState([{}]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -35,52 +35,59 @@ function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
-      return () => {
-        socket.off("message");
-      };
+      // Handle the message...
     });
+
+    return () => {
+      socket.off("message");
+    };
   }, [socket]);
 
-  useEffect(() => {
-    const fetchChatAndDefineSendMessage = async () => {
-      if (selectedChat) {
-        const fetchedChat = await axios.post(
-          "http://localhost:8000/api/v1/chat/personalChat",
-          {
-            recipient: selectedChat,
-            user: user,
-          }
-        );
-        setChat(fetchedChat.data.message)
-        const ChatId = fetchedChat.data.message._id;
-
-        const fetchedMessages = await axios.get(`http://localhost:8000/api/v1/message/getMessagesFromId/${ChatId}`);
-        
-        const chatMessages = []
-        for(let i = 0; i < fetchedMessages.data.data.length; i++) {
-          chatMessages.push(fetchedMessages.data.data[i].content);
+  const fetchChatAndDefineSendMessage = async (chat) => {
+    if (chat) {
+      const fetchedChat = await axios.post(
+        "http://localhost:8000/api/v1/chat/personalChat",
+        {
+          recipient: chat,
+          user: user,
         }
-        setMessages(chatMessages);
-
-        const newSendMessage = async (message) => {
-          socket.emit("message", message);
-
-          const updatedChat = await axios.post(
-            "http://localhost:8000/api/v1/chat/addMessageToChat",
-            {
-              chatId: fetchedChat.data._id,
-              content: message,
-            }
-          );
-          setMessages(updatedChat.data.messages);
-        };
-
-        setSendMessage(() => newSendMessage);
+      );
+      setChat(fetchedChat.data.message);
+      const ChatId = fetchedChat.data.message._id;
+      const fetchedMessages = await axios.get(
+        `http://localhost:8000/api/v1/message/getMessagesFromId/${ChatId}`
+      );
+      const chatMessages = [];
+      for (let i = 0; i < fetchedMessages.data.data.length; i++) {
+        chatMessages.push(fetchedMessages.data.data[i].content);
       }
-    };
+      setMessages(chatMessages);
+    }
+  };
 
-    fetchChatAndDefineSendMessage();
+  useEffect(() => {
+    fetchChatAndDefineSendMessage(selectedChat);
   }, [selectedChat]);
+
+  useEffect(() => {
+    const newSendMessage = async (message) => {
+      // socket.emit("message", message);
+      const updatedChat = await axios.post(
+        "http://localhost:8000/api/v1/chat/addMessageToChat",
+        {
+          userId: user._id,
+          chatId: chat._id,
+          content: message,
+        }
+      );
+      // console.log(updatedChat);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        updatedChat.data.message,
+      ]);
+    };
+    setSendMessage(() => newSendMessage);
+  }, [messages]);
 
   if (!isAuthenticated) {
     return (
@@ -104,6 +111,25 @@ function Chat() {
   return (
     <div className="flex h-screen bg-[#2e2e2e]">
       <div className="w-1/4 border-r">
+        <form
+          className="p-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            fetchChatAndDefineSendMessage(searchChat);
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search Chats"
+            className="p-2 w-4/5"
+            onChange={(e) => {
+              setSearchChat(e.target.value);
+            }}
+          />
+          <button type="submit" className="bg-blue-500 text-white p-2 m-2">
+            Search
+          </button>
+        </form>
         <Contactswindow chats={chats} selectChat={setSelectedChat} />
       </div>
       <div className="w-3/4">

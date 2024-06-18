@@ -8,9 +8,9 @@ function Contactswindow ({ chats, selectChat }) {
 
   return (
     <div className="flex flex-col w-full h-full overflow-y-auto">
-      {chats.map(chat => (
+      {chats.map((chat,idx) => (
         <div
-          key={chat._id}
+          key={idx}
           className="flex items-center p-4 border-b cursor-pointer hover:bg-gray-200"
           onClick={() => handleChatSelection(chat.name)}
         >
