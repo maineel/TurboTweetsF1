@@ -33,7 +33,6 @@ function Login() {
           password,
         }
       );
-      console.log(response);
       if (response.status != 200) {
         toast.error("Error in registering user", {
           position: "top-right",
@@ -64,6 +63,11 @@ function Login() {
           navigate("/");
         },
       });
+      console.log(response);
+      const createChat = await axios.post("http://localhost:8000/api/v1/chat/personalChat", {
+        recipient: response.data.data.user.userName,
+        user: response.data.data.user,
+      })
     } catch (err) {
       toast.error("Error in logging in user", {
         position: "top-right",

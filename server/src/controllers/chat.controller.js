@@ -87,13 +87,14 @@ const personalChat = asyncHandler(async (req, res) => {
   if(!recipientUser){
     throw new ApiError(500, "No such user exists");
   }
-
   const chatExists = await Chat.findOne({
     members: { $all: [user._id, recipientUser._id], $size: 2 },
   });
-  
+
   if (chatExists) {
-    throw new ApiError(200, chatExists, "Chat already exists");
+    return res
+      .status(201)
+      .json(new ApiResponse(201, chatExists, "Chat already exists"));
   }
 
   const chat = await Chat.create({
@@ -105,7 +106,7 @@ const personalChat = asyncHandler(async (req, res) => {
     avatar: recipientUser.avatar,
     senderAvatar: user.avatar,
   });
-
+  
   return res
     .status(201)
     .json(new ApiResponse(201, chat, "Chat created successfully"));

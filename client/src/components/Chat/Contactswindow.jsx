@@ -24,6 +24,7 @@ function Contactswindow() {
   const { user } = useContext(AuthContext);
 
   const handleChatSelection = (chatName) => {
+    console.log(chatName);
     setSelectedChat(chatName);
   };
 
@@ -41,7 +42,7 @@ function Contactswindow() {
       setAllChats(response.data.data);
     };
     fetchChats();
-  }, [allChats]);
+  }, [chat, allMessagesFromChat]);
 
   const fetchChatAndDefineSendMessage = async (chat) => {
     if (chat) {
@@ -52,7 +53,9 @@ function Contactswindow() {
           user: user,
         }
       );
-      if(fetchedChat?.response?.status === 500){
+      console.log(fetchedChat);
+      /* if(!fetchedChat){
+        alert("No such user exists");
         toast.error("No such user exists", {
           position: "top-right",
           autoClose: 2000,
@@ -63,8 +66,8 @@ function Contactswindow() {
           progress: undefined,
           theme: "colored",
         });
-      }
-      else if(fetchedChat?.status === 201){
+      } */
+      if(fetchedChat?.status === 201){
         if(!fetchedChat.data.data.groupChat && fetchedChat.data.data.sender !== user._id){
           fetchedChat.data.data.name = fetchedChat.data.data.senderName;
           fetchedChat.data.data.avatar = fetchedChat.data.data.senderAvatar;
@@ -87,6 +90,8 @@ function Contactswindow() {
         chatMessages.push(fetchedMessages.data.data[i].content);
       }
       setAllMessagesFromChat(chatMessages);
+      setSelectedChat(chat);
+      setSearchChat("");
     }
   };
 
