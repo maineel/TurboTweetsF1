@@ -10,6 +10,20 @@ const emitEvent = (req, event, users, data) => {
   console.log("Emitting event", event);
 };
 
+const userInChat = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId).select("userName");
+  
+  if(!user){
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User retrieved successfully"));
+});
+
 const uploadChatAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.file?.path;
 
@@ -38,7 +52,7 @@ const newGroupChat = asyncHandler(async (req, res) => {
   await Chat.create({
     name,
     groupChat: true,
-    creator: req.user._id,
+    sender: req.user._id,
     members: allMembers,
     avatar: avatar.url,
   });
@@ -67,10 +81,12 @@ const addMembers = asyncHandler(async (req, res) => {
 });
 
 const personalChat = asyncHandler(async (req, res) => {
-  
   const { recipient, user } = req.body;
-
   const recipientUser = await User.findOne({ userName: recipient });
+  
+  if(!recipientUser){
+    throw new ApiError(500, "No such user exists");
+  }
 
   const chatExists = await Chat.findOne({
     members: { $all: [user._id, recipientUser._id], $size: 2 },
@@ -83,9 +99,11 @@ const personalChat = asyncHandler(async (req, res) => {
   const chat = await Chat.create({
     name: recipientUser.userName,
     groupChat: false,
-    creator: user._id,
+    sender: user._id,
     members: [user._id, recipientUser._id],
-    avatar: recipientUser.avatar.url,
+    senderName: user.userName,
+    avatar: recipientUser.avatar,
+    senderAvatar: user.avatar,
   });
 
   return res
@@ -116,12 +134,13 @@ const searchChat = asyncHandler(async (req, res) => {
 });
 
 const addMessageToChat = asyncHandler(async (req, res) => {
-  const { userId, chatId, content } = req.body;
+  const { userId, chatId, content, reciever } = req.body;
   
   const message = await Message.create({
     sender: userId,
     chat: chatId,
     content,
+    reciever
   });
 
   const chat = await Chat.findById(chatId);
@@ -135,6 +154,7 @@ const addMessageToChat = asyncHandler(async (req, res) => {
 });
 
 export {
+  userInChat,
   uploadChatAvatar,
   newGroupChat,
   addMembers,

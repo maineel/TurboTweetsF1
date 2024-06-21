@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './components/Auth/Login.jsx';
 import Signup from './components/Auth/Signup.jsx';
 import Chat from './components/Chat/Chat.jsx';
+import { ChatProvider } from "./context/ChatContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         path: "inbox",
-        element: <Chat />,
+        element: <ChatProvider><Chat /></ChatProvider>,
       }
     ],
   },

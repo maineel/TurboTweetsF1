@@ -93,7 +93,7 @@ const searchMessage = asyncHandler(async (req, res) => {
 
 const getMessagesFromId = asyncHandler(async (req, res) => {
     const { chatId } = req.params;
-
+    
     const chat = await Chat.findById(chatId);
     
     if (!chat) {
