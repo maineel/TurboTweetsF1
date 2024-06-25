@@ -153,6 +153,20 @@ const addMessageToChat = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, chat, "Message sent successfully"));
 });
 
+const deleteChat = asyncHandler(async (req, res) => {
+  const { chatId } = req.params;
+
+  const chat = await Chat.findByIdAndDelete(chatId);
+  
+  for(const message of chat.messages) {
+    await Message.findByIdAndDelete(message);
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Chat deleted successfully"));
+});
+
 export {
   userInChat,
   uploadChatAvatar,
@@ -162,4 +176,5 @@ export {
   getMyChats,
   searchChat,
   addMessageToChat,
+  deleteChat
 };

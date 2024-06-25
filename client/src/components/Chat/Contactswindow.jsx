@@ -6,8 +6,27 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SocketContext } from "../../context/SocketContext";
+import { FaTrashCan } from "react-icons/fa6";
 
 function Contactswindow() {
+  const [hoveredChat, setHoveredChat] = useState(null);
+
+  const handleChatDeletion = async (chat) => {
+    await axios.delete(`http://localhost:8000/api/v1/chat/deleteChat/${chat._id}`);
+    toast.success("Chat deleted successfully", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    setChat(null);
+    setAllChats(allChats.filter((c) => c._id !== chat._id));
+  };
+
   const {
     searchChat,
     setSearchChat,
@@ -23,8 +42,8 @@ function Contactswindow() {
     setChat,
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
-  
-  const {onlineUsers} = useContext(SocketContext);
+
+  const { onlineUsers } = useContext(SocketContext);
   const isOnline = (userId) => {
     return onlineUsers.includes(userId);
   };
@@ -114,7 +133,7 @@ function Contactswindow() {
   }, [selectedChat]);
 
   const extractChatMember = (chat) => {
-    if (user._id === chat.members?.[0] ) {
+    if (user._id === chat.members?.[0]) {
       return chat.members?.[1];
     }
     return chat.members?.[0];
@@ -145,17 +164,35 @@ function Contactswindow() {
         {allChats.map((chat, idx) => (
           <div
             key={idx}
-            className={`flex items-center p-4 border-b cursor-pointer hover:bg-gray-200 ${selectedChat === chat.name ? "bg-gray-200" : ""}`}
+            className={`flex flex-row items-center justify-between p-4 border-b cursor-pointer hover:bg-gray-500 ${
+              selectedChat === chat.name ? "bg-gray-200" : ""
+            }`}
+            onMouseEnter={() => setHoveredChat(chat.name)}
+            onMouseLeave={() => setHoveredChat(null)}
             onClick={() => handleChatSelection(chat.name)}
           >
-            <img
-              src={chat.avatar}
-              alt={chat.name}
-              className={`w-12 h-12 rounded-full mr-4 ${!chat.groupChat && isOnline(extractChatMember(chat)) ? "border-4 border-green-500" : ""}`}
-            />
-            <div>
-              <h3 className="text-lg font-semibold">{chat.name}</h3>
+            <div className="flex flex-row items-center">
+              <img
+                src={chat.avatar}
+                alt={chat.name}
+                className={`w-12 h-12 rounded-full mr-4 ${
+                  !chat.groupChat && isOnline(extractChatMember(chat))
+                    ? "border-4 border-green-500"
+                    : ""
+                }`}
+              />
+              <div>
+                <h3 className="text-lg font-semibold">{chat.name}</h3>
+              </div>
             </div>
+            {hoveredChat === chat.name && (
+              <FaTrashCan
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleChatDeletion(chat);
+                }}
+              />
+            )}
           </div>
         ))}
       </div>

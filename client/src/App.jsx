@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       {
         path: "threads",
         element: <Threads />,
-      },
+      }, 
       {
         path: "f1stats",
         element: <Stats />,
