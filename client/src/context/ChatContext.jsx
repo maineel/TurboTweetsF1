@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
-    const [searchChat, setSearchChat] = useState("");
+    const [searchChat, setSearchChat] = useState(null);
     const [allChats, setAllChats] = useState([{}]);
     const [selectedChat, setSelectedChat] = useState(null);
     const [allMessagesFromChat, setAllMessagesFromChat] = useState([]);

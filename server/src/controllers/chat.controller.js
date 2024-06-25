@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Message } from "../models/message.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { User } from "../models/user.model.js";
+import { getRecieverSocketId, io } from "../socket/socket.js";
 
 const emitEvent = (req, event, users, data) => {
   console.log("Emitting event", event);
@@ -14,8 +15,8 @@ const userInChat = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
   const user = await User.findById(userId).select("userName");
-  
-  if(!user){
+
+  if (!user) {
     throw new ApiError(404, "User not found");
   }
 
@@ -56,8 +57,6 @@ const newGroupChat = asyncHandler(async (req, res) => {
     members: allMembers,
     avatar: avatar.url,
   });
-
-  emitEvent(req, "newGroupChat", allMembers, { name });
 });
 
 const addMembers = asyncHandler(async (req, res) => {
@@ -73,8 +72,6 @@ const addMembers = asyncHandler(async (req, res) => {
   chat.members = allMembers;
   await chat.save();
 
-  emitEvent(req, "addMembers", allMembers, { name: chat.name });
-
   return res
     .status(200)
     .json(new ApiResponse(200, chat, "Members added successfully"));
@@ -83,14 +80,13 @@ const addMembers = asyncHandler(async (req, res) => {
 const personalChat = asyncHandler(async (req, res) => {
   const { recipient, user } = req.body;
   const recipientUser = await User.findOne({ userName: recipient });
-  
-  if(!recipientUser){
+
+  if (!recipientUser) {
     throw new ApiError(500, "No such user exists");
   }
   const chatExists = await Chat.findOne({
     members: { $all: [user._id, recipientUser._id], $size: 2 },
   });
-
   if (chatExists) {
     return res
       .status(201)
@@ -106,14 +102,14 @@ const personalChat = asyncHandler(async (req, res) => {
     avatar: recipientUser.avatar,
     senderAvatar: user.avatar,
   });
-  
+
   return res
     .status(201)
     .json(new ApiResponse(201, chat, "Chat created successfully"));
 });
 
 const getMyChats = asyncHandler(async (req, res) => {
-  const {user} = req.params;
+  const { user } = req.params;
   const chats = await Chat.find({ members: user }).sort("-updatedAt");
 
   return res
@@ -136,18 +132,21 @@ const searchChat = asyncHandler(async (req, res) => {
 
 const addMessageToChat = asyncHandler(async (req, res) => {
   const { userId, chatId, content, reciever } = req.body;
-  
+
   const message = await Message.create({
     sender: userId,
     chat: chatId,
     content,
-    reciever
   });
 
   const chat = await Chat.findById(chatId);
   chat.messages.push(message._id);
   await chat.save();
-  emitEvent(req, "newMessage", chat.members, { chatId, message });
+
+  for (const member of chat.members) {
+    const recieverSocketId = getRecieverSocketId(member);
+    io.to(recieverSocketId).emit("newMessage", message, member);
+  }
 
   return res
     .status(201)
@@ -162,5 +161,5 @@ export {
   personalChat,
   getMyChats,
   searchChat,
-  addMessageToChat
+  addMessageToChat,
 };

@@ -1,33 +1,14 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useState, useEffect, useContext } from "react";
-import { AuthContext, AuthProvider } from "../../context/AuthContext";
-import { ChatContext } from "../../context/ChatContext";
+import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import Contactswindow from "./Contactswindow.jsx";
 import Messagewindow from "./Messagewindow.jsx";
-import axios from "axios";
+import { SocketContext } from "../../context/SocketContext.jsx";
 
 function Chat() {
-  const socket = useMemo(
-    () =>
-      io.connect("localhost:8001", {
-        withCredentials: true,
-      }),
-    []
-  );
-
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
-    useContext(AuthContext);  
-
-  useEffect(() => {
-    socket.on("message", (message) => {
-      // Handle the message...
-    });
-
-    return () => {
-      socket.off("message");
-    };
-  }, [socket]);
+    useContext(AuthContext);
 
   if (!isAuthenticated) {
     return (
@@ -49,17 +30,16 @@ function Chat() {
   }
 
   return (
-    <AuthProvider>
-    <div className="flex h-screen bg-[#2e2e2e]">
-      <div className="w-1/4 border-r">
-        
-        <Contactswindow />
+    <>
+      <div className="flex h-screen bg-[#2e2e2e]">
+        <div className="w-1/4 border-r">
+          <Contactswindow />
+        </div>
+        <div className="w-3/4">
+          <Messagewindow />
+        </div>
       </div>
-      <div className="w-3/4">
-        <Messagewindow />
-      </div>
-    </div>
-    </AuthProvider>
+    </>
   );
 }
 

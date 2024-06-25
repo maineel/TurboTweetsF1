@@ -14,14 +14,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout/>,
     children: [
-      // {
-      //   path: "",
-      //   element: <Threads />,
-      // },
-      // {
-      //   path: "threads",
-      //   element: <Threads />,
-      // },
+      {
+        path: "",
+        element: <Threads />,
+      },
+      {
+        path: "threads",
+        element: <Threads />,
+      },
       {
         path: "f1stats",
         element: <Stats />,

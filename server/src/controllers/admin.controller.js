@@ -17,7 +17,6 @@ const driverDetails = asyncHandler(async (req, res) => {
         driverCode: data.MRData.DriverTable.Drivers[i - 1].code,
         driverDOB: data.MRData.DriverTable.Drivers[i - 1].dateOfBirth,
       });
-      // console.log(driverDetail);
     }
     return res.status(200).json({ message: "Data fetched successfully" });
   } catch (error) {
@@ -51,7 +50,7 @@ const constructorDetails = asyncHandler(async (req, res) => {
 
 async function fetchConstructorApiData() {
   const response = await fetch(
-    "http://ergast.com/api/f1/2023/constructors.json"
+    "http://ergast.com/api/f1/2024/constructors.json"
   );
   if (!response.ok) {
     throw new ApiError(500, `API fetch failed with status: ${response.status}`);
@@ -60,7 +59,7 @@ async function fetchConstructorApiData() {
 }
 
 const fetchRaceApiData = async () => {
-  const response = await fetch("http://ergast.com/api/f1/2023.json");
+  const response = await fetch("http://ergast.com/api/f1/2024.json");
   if (!response.ok) {
     throw new ApiError(500, `API fetch failed with status: ${response.status}`);
   }
@@ -88,7 +87,7 @@ const getRaceDetails = asyncHandler(async (req, res) => {
 
 const fetchRaceResultsApiData = async (raceNumber) => {
   const response = await fetch(
-    `http://ergast.com/api/f1/2023/${raceNumber}/results.json`
+    `http://ergast.com/api/f1/2024/${raceNumber}/results.json`
   );
   if (!response.ok) {
     throw new ApiError(500, `API fetch failed with status: ${response.status}`);
@@ -107,7 +106,6 @@ const getRaceResults = asyncHandler(async (req, res) => {
       const constructorId = await Constructor.findOne({
         constructorName: raceResults[i - 1].Constructor.name,
       });
-      // console.log(driverId._id, constructorId._id);
       const points = raceResults[i - 1].points;
       race.raceResults.push({
         driverId: driverId._id,
@@ -115,7 +113,6 @@ const getRaceResults = asyncHandler(async (req, res) => {
         points: points,
         position: i,
       });
-      // console.log(race.raceResults[i]);
     }
     await race.save();
     res

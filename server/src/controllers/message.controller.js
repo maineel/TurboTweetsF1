@@ -107,4 +107,12 @@ const getMessagesFromId = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, messages, "Messages retrieved successfully"));
 });
 
-export { uploadAttachement, newMessage, editMessage, searchMessage, getMessagesFromId };
+
+const getMessagesFromMessageId = asyncHandler(async(req,res) => {
+    const {messageId} = req.body;
+
+    const message = await Message.findById(messageId);
+
+    return res.status(200).json(new ApiResponse(200, message, "Message retrieved successfully"));
+})
+export { uploadAttachement, newMessage, editMessage, searchMessage, getMessagesFromId, getMessagesFromMessageId };

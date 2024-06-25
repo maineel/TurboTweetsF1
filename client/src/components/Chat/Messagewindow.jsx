@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { ChatContext } from "../../context/ChatContext";
+import { SocketContext } from "../../context/SocketContext";
 
 function Messagewindow() {
   const [message, setMessage] = useState("");
@@ -22,26 +23,34 @@ function Messagewindow() {
   } = useContext(ChatContext);
   const { user } = useContext(AuthContext);
 
+  const { socket } = useContext(SocketContext);
+
   useEffect(() => {
     const newSendMessage = async (message) => {
-      // socket.emit("message", message);
-      console.log(chat.members.filter((member) => member !== user._id)[0]);
-      const updatedChat = await axios.post(
-        "http://localhost:8000/api/v1/chat/addMessageToChat",
-        {
-          userId: user._id,
-          chatId: chat._id,
-          content: message,
-          reciever: [chat.members.filter((member) => member !== user._id)[0]],
-        }
-      );
-      if (updatedChat.data.success) {
-        setAllMessagesFromChat((prevMessages) => [...prevMessages, message]);
+      if (message) {
+        const updatedChat = await axios.post(
+          "http://localhost:8000/api/v1/chat/addMessageToChat",
+          {
+            userId: user._id,
+            chatId: chat._id,
+            content: message,
+            reciever: [chat.members.filter((member) => member !== user._id)[0]],
+          }
+        );
         setMessage("");
       }
     };
     setSendMessage(() => newSendMessage);
   }, [allMessagesFromChat, user, chat]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("newMessage", (newMessage) => {
+        setAllMessagesFromChat((prevMessages) => [...prevMessages, newMessage]);
+      });
+      return () => socket.off("newMessage");
+    }
+  }, [socket, setAllMessagesFromChat, allMessagesFromChat]);
 
   if (!chat) {
     return (
@@ -51,7 +60,7 @@ function Messagewindow() {
     );
   }
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full overflow-hidden">
       <div className="flex items-center p-4 border-b">
         <img
           src={chat.avatar}
@@ -60,14 +69,22 @@ function Messagewindow() {
         />
         <h2 className="text-xl font-semibold text-[#ff0000]">{chat.name}</h2>
       </div>
-      <div className="flex-grow p-4 overflow-y-auto bottom-0">
+      <div className="flex flex-col grow p-4 overflow-y-auto">
         {allMessagesFromChat.map((msg, idx) => (
-          <div
-            key={idx}
-            className="mb-4 p-2 rounded-lg max-w-xs bg-gray-200 self-start"
-          >
-            {msg}
-          </div>
+          <React.Fragment key={idx}>
+            <div
+              className={`mb-4 p-2 rounded-lg max-w-xl break-words font-mono font-semibold ${
+                msg.sender === user._id
+                  ? "bg-blue-200 self-end"
+                  : "bg-gray-200 self-start"
+              }`}
+            >
+              {msg.content}
+              <p className="text-sm font-light mt-2 italic text-gray-600 opacity-75">
+                {new Date(msg.updatedAt).toLocaleString()}
+              </p>
+            </div>
+          </React.Fragment>
         ))}
       </div>
       <div className="bg-white h-auto rounded-md flex flex-row justify-between m-2 p-2">
@@ -77,7 +94,7 @@ function Messagewindow() {
           className="w-full p-2 mr-2"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => {
+          onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
               sendMessage(message);
