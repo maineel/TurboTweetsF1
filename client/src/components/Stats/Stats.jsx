@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 
 function Stats() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [drivers, setDrivers] = useState([]);
   const [constructors, setConstructors] = useState([]);
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
@@ -36,7 +36,8 @@ function Stats() {
     
             sessionStorage.setItem('drivers', JSON.stringify(driverData));
             sessionStorage.setItem('constructors', JSON.stringify(constructorData));
-    
+            
+            setIsLoading(false);
             setDrivers(driverData);
             setConstructors(constructorData);
           } catch (error) {

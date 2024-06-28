@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import Accounts from "./Accounts";
-import Footer from "../Footer/Footer";
 
 function Threads() {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,44 +10,61 @@ function Threads() {
   const [data, setData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      const subreddit = [
-        "formula1",
-        "formuladank",
-        "Formula1Point5",
-        "F1Technical",
-      ];
-      const posts_array = [];
-      for (let i = 0; i < subreddit.length; i++) {
-        const url = `https://www.reddit.com/r/${subreddit[i]}.json?limit=100`;
-        try {
-          const response = await fetch(url);
-          const result = await response.json();
-          const posts = result.data.children.map((child) => child.data);
-          posts_array.push(posts);
-        } catch (error) {
-          console.error(error);
+      // Check if data exists in localStorage
+      const storedData = localStorage.getItem("postData");
+      if (storedData) {
+        setData(JSON.parse(storedData));
+        setIsLoading(false);
+      } else {
+        const subreddit = [
+          "formula1",
+          "formuladank",
+          "Formula1Point5",
+          "F1Technical",
+        ];
+        const posts_array = [];
+        for (let i = 0; i < subreddit.length; i++) {
+          const url = `https://www.reddit.com/r/${subreddit[i]}.json?limit=100`;
+          try {
+            const response = await fetch(url);
+            const result = await response.json();
+            const posts = result.data.children.map((child) => child.data);
+            posts_array.push(...posts); // Use spread operator to flatten the array
+          } catch (error) {
+            console.error(error);
+          }
         }
+        const sortedPosts = posts_array.sort((a, b) => b.ups - a.ups);
+        setData(sortedPosts);
+        localStorage.setItem("postData", JSON.stringify(sortedPosts)); // Store fetched data in localStorage
+        setIsLoading(false);
       }
-      setData(posts_array.flat().sort((a, b) => b.ups - a.ups));
-      setIsLoading(false);
     };
 
     fetchData();
   }, []);
-
-  const [accounts, setAccounts] = useState(null);
+  const [accounts, setAccounts] = useState(null); 
   useEffect(() => {
     const fetchAccounts = async () => {
-      const url =
-        "https://www.reddit.com/subreddits/search.json?q=formula1&limit=15";
-      try {
-        const response = await fetch(url);
-        const result = await response.json();
-        setAccounts(result.data.children.map((child) => child.data));
-      } catch (error) {
-        console.error(error);
+      // Check if accounts data exists in localStorage
+      const storedAccounts = localStorage.getItem("accountData");
+      if (storedAccounts) {
+        setAccounts(JSON.parse(storedAccounts));
+      } else {
+        const url =
+          "https://www.reddit.com/subreddits/search.json?q=formula1&limit=15";
+        try {
+          const response = await fetch(url);
+          const result = await response.json();
+          const accountsData = result.data.children.map((child) => child.data);
+          setAccounts(accountsData);
+          localStorage.setItem("accountData", JSON.stringify(accountsData)); // Store fetched accounts in localStorage
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
+
     fetchAccounts();
   }, []);
 
@@ -115,7 +131,6 @@ function Threads() {
           </div>
         </div>
       )}
-      {isLoading ? null : <Footer />}
     </div>
   );
 }

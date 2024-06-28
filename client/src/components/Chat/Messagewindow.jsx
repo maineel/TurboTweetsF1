@@ -73,19 +73,20 @@ function Messagewindow() {
         {allMessagesFromChat.map((msg, idx) => (
           <React.Fragment key={idx}>
             <div
-              className={`mb-4 p-2 rounded-lg max-w-xl break-words font-mono font-semibold ${
+              className={`mb-2 p-2 rounded-lg max-w-xl break-words font-mono font-semibold text-white ${
                 msg.sender === user._id
-                  ? "bg-blue-200 self-end"
-                  : "bg-gray-200 self-start"
+                  ? "bg-blue-600 self-end"
+                  : "bg-gray-500 self-start"
               }`}
             >
               {msg.content}
-              <p className="text-sm font-light mt-2 italic text-gray-600 opacity-75">
+              <p className="text-sm font-light mt-2 italic text-black opacity-75">
                 {new Date(msg.updatedAt).toLocaleString()}
               </p>
             </div>
           </React.Fragment>
         ))}
+        
       </div>
       <div className="bg-white h-auto rounded-md flex flex-row justify-between m-2 p-2">
         <input

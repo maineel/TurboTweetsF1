@@ -84,6 +84,11 @@ const personalChat = asyncHandler(async (req, res) => {
   if (!recipientUser) {
     throw new ApiError(500, "No such user exists");
   }
+
+  if(recipientUser._id === user._id) {
+    throw new ApiError(500, "You cannot chat with yourself");
+  }
+
   const chatExists = await Chat.findOne({
     members: { $all: [user._id, recipientUser._id], $size: 2 },
   });

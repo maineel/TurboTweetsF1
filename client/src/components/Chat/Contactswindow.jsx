@@ -77,19 +77,6 @@ function Contactswindow() {
           user: user,
         }
       );
-      /* if(!fetchedChat){
-        alert("No such user exists");
-        toast.error("No such user exists", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } */
       if (fetchedChat?.status === 201) {
         if (
           !fetchedChat.data.data.groupChat &&

@@ -9,3 +9,9 @@
 .hover-scale:hover {
   transform: scale(1.05);
 }
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}

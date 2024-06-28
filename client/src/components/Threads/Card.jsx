@@ -1,4 +1,6 @@
 import React from "react";
+import { BiSolidUpvote } from "react-icons/bi";
+import { FaCommentAlt } from "react-icons/fa";
 
 function Card({ data }) {
   return (
@@ -16,9 +18,19 @@ function Card({ data }) {
         </a>
         <h1 className="text-xl my-2 font-mono">Author: u/{data.author}</h1>
         {data.selftext.length <= 1000 && (
-          <p className="font-mono">{data.selftext ? (data.selftext.split(" ").slice(0, 80).join(" ")):""}</p>
+          <p className="font-mono">
+            {data.selftext
+              ? data.selftext.split(" ").slice(0, 80).join(" ")
+              : ""}
+          </p>
         )}
+        <div className="flex flex-row items-center">
+          <BiSolidUpvote className="mr-1" />
+          {data.ups} <FaCommentAlt className="ml-4 mr-1" />
+          {data.num_comments}
+        </div>
       </div>
+
       <div className="flex">
         <img
           className="object-cover p-2"
