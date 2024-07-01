@@ -29,7 +29,7 @@ function Messagewindow() {
     const newSendMessage = async (message) => {
       if (message) {
         const updatedChat = await axios.post(
-          "http://localhost:8000/api/v1/chat/addMessageToChat",
+          "https://lturbotweetsf1.onrender.com/api/v1/chat/addMessageToChat",
           {
             userId: user._id,
             chatId: chat._id,

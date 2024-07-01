@@ -10,8 +10,7 @@ function Threads() {
   const [data, setData] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      // Check if data exists in localStorage
-      const storedData = localStorage.getItem("postData");
+      const storedData = sessionStorage.getItem("postData");
       if (storedData) {
         setData(JSON.parse(storedData));
         setIsLoading(false);
@@ -29,14 +28,14 @@ function Threads() {
             const response = await fetch(url);
             const result = await response.json();
             const posts = result.data.children.map((child) => child.data);
-            posts_array.push(...posts); // Use spread operator to flatten the array
+            posts_array.push(...posts); 
           } catch (error) {
             console.error(error);
           }
         }
         const sortedPosts = posts_array.sort((a, b) => b.ups - a.ups);
         setData(sortedPosts);
-        localStorage.setItem("postData", JSON.stringify(sortedPosts)); // Store fetched data in localStorage
+        sessionStorage.setItem("postData", JSON.stringify(sortedPosts)); 
         setIsLoading(false);
       }
     };
@@ -46,8 +45,7 @@ function Threads() {
   const [accounts, setAccounts] = useState(null); 
   useEffect(() => {
     const fetchAccounts = async () => {
-      // Check if accounts data exists in localStorage
-      const storedAccounts = localStorage.getItem("accountData");
+      const storedAccounts = sessionStorage.getItem("accountData");
       if (storedAccounts) {
         setAccounts(JSON.parse(storedAccounts));
       } else {
@@ -58,7 +56,7 @@ function Threads() {
           const result = await response.json();
           const accountsData = result.data.children.map((child) => child.data);
           setAccounts(accountsData);
-          localStorage.setItem("accountData", JSON.stringify(accountsData)); // Store fetched accounts in localStorage
+          sessionStorage.setItem("accountData", JSON.stringify(accountsData));
         } catch (error) {
           console.error(error);
         }

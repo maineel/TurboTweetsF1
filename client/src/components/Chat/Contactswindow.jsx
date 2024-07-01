@@ -12,7 +12,7 @@ function Contactswindow() {
   const [hoveredChat, setHoveredChat] = useState(null);
 
   const handleChatDeletion = async (chat) => {
-    await axios.delete(`http://localhost:8000/api/v1/chat/deleteChat/${chat._id}`);
+    await axios.delete(`https://turbotweetsf1.onrender.com/api/v1/chat/deleteChat/${chat._id}`);
     toast.success("Chat deleted successfully", {
       position: "top-right",
       autoClose: 2000,
@@ -55,7 +55,7 @@ function Contactswindow() {
   useEffect(() => {
     const fetchChats = async () => {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/chat/getMyChats/${user._id}`
+        `https://turbotweetsf1.onrender.com/api/v1/chat/getMyChats/${user._id}`
       );
       for (const recievedChat of response.data.data) {
         if (!recievedChat.groupChat && recievedChat.sender !== user._id) {
@@ -71,7 +71,7 @@ function Contactswindow() {
   const fetchChatAndDefineSendMessage = async (chat) => {
     if (chat) {
       const fetchedChat = await axios.post(
-        "http://localhost:8000/api/v1/chat/personalChat",
+        "https://turbotweetsf1.onrender.com/api/v1/chat/personalChat",
         {
           recipient: chat,
           user: user,
@@ -99,7 +99,7 @@ function Contactswindow() {
       }
       const ChatId = fetchedChat.data.message._id || fetchedChat.data.data._id;
       const fetchedMessages = await axios.get(
-        `http://localhost:8000/api/v1/message/getMessagesFromId/${ChatId}`
+        `https://turbotweetsf1.onrender.com/api/v1/message/getMessagesFromId/${ChatId}`
       );
       const chatMessages = [];
       for (let i = 0; i < fetchedMessages.data.data.length; i++) {

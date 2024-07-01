@@ -32,6 +32,8 @@ function Navbar() {
       }
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("postData");
+      localStorage.removeItem("accountData");
       setIsAuthenticated(false);
       setUser(null);
       navigate("/");

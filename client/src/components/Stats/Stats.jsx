@@ -11,43 +11,52 @@ function Stats() {
   const { user, setUser, isAuthenticated, setIsAuthenticated } =
     useContext(AuthContext);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        const driverUrl = "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
-        const constructorUrl = "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
-    
-        const localDrivers = sessionStorage.getItem('drivers');
-        const localConstructors = sessionStorage.getItem('constructors');
-    
-        if (localDrivers && localConstructors) {
-          setDrivers(JSON.parse(localDrivers));
-          setConstructors(JSON.parse(localConstructors));
-        } else {
-          try {
-            const driverResponse = await fetch(driverUrl);
-            const constructorResponse = await fetch(constructorUrl);
-    
-            if (!driverResponse.ok || !constructorResponse.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-    
-            const driverData = await driverResponse.json();
-            const constructorData = await constructorResponse.json();
-    
-            sessionStorage.setItem('drivers', JSON.stringify(driverData));
-            sessionStorage.setItem('constructors', JSON.stringify(constructorData));
-            
-            setIsLoading(false);
-            setDrivers(driverData);
-            setConstructors(constructorData);
-          } catch (error) {
-            console.error('Failed to fetch data:', error);
+  useEffect(() => {
+    const fetchData = async () => {
+      const driverUrl =
+        "https://turbotweetsf1.onrender.com/api/v1/driver/driverDetails";
+      const constructorUrl =
+        "https://turbotweetsf1.onrender.com/api/v1/constructor/constructorDetails";
+
+      const localDrivers = localStorage.getItem("drivers");
+      const localConstructors = localStorage.getItem("constructors");
+
+      if (localDrivers && localConstructors) {
+        setDrivers(JSON.parse(localDrivers));
+        setConstructors(JSON.parse(localConstructors));
+        console.log(drivers, constructors);
+        setIsLoading(false);
+      } else {
+        try {
+          const [driverResponse, constructorResponse] = await Promise.all([
+            fetch(driverUrl),
+            fetch(constructorUrl),
+          ]);
+          
+          if (!driverResponse.ok || !constructorResponse.ok) {
+            throw new Error(
+              `HTTP error! status: ${driverResponse.status} or ${constructorResponse.status}`
+            );
           }
+
+          const driverData = await driverResponse.json();
+          const constructorData = await constructorResponse.json();
+
+          localStorage.setItem("drivers", JSON.stringify(driverData));
+          localStorage.setItem("constructors", JSON.stringify(constructorData));
+          
+          setDrivers(driverData);
+          setConstructors(constructorData);
+        } catch (error) {
+          console.error("Failed to fetch data:", error);
+        } finally {
+          setIsLoading(false);
         }
-      };
-    
-      fetchData();
-    }, []);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   if (isLoading) {
     return (
@@ -76,7 +85,10 @@ function Stats() {
         }}
         className="text-3xl font-bold font-mono text-[#FF0000]"
       >
-      <Link to="/auth/login" className="mx-2 underline underline-offset-2">LogIn</Link> <span> to view the stats</span>
+        <Link to="/auth/login" className="mx-2 underline underline-offset-2">
+          LogIn
+        </Link>{" "}
+        <span> to view the stats</span>
       </div>
     );
   }
