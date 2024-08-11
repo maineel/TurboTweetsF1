@@ -28,18 +28,26 @@ function Messagewindow() {
   useEffect(() => {
     const newSendMessage = async (message) => {
       if (message) {
-        const updatedChat = await axios.post(
-          "https://lturbotweetsf1.onrender.com/api/v1/chat/addMessageToChat",
-          {
-            userId: user._id,
-            chatId: chat._id,
-            content: message,
-            reciever: [chat.members.filter((member) => member !== user._id)[0]],
-          }
-        );
-        setMessage("");
+        try {
+          const updatedChat = await axios.post(
+            "https://turbotweetsf1.onrender.com/api/v1/chat/addMessageToChat",
+            {
+              userId: user._id,
+              chatId: chat._id,
+              content: message,
+              reciever: [
+                chat.members.filter((member) => member !== user._id)[0],
+              ],
+            }
+          );
+          
+          // socket.emit("sendMessage", updatedChat.data.newMessage);
+          setMessage("");
+        } catch (error) {
+          console.log(error);
+        }
       }
-    };
+    };    
     setSendMessage(() => newSendMessage);
   }, [allMessagesFromChat, user, chat]);
 
@@ -48,9 +56,11 @@ function Messagewindow() {
       socket.on("newMessage", (newMessage) => {
         setAllMessagesFromChat((prevMessages) => [...prevMessages, newMessage]);
       });
+  
       return () => socket.off("newMessage");
     }
   }, [socket, setAllMessagesFromChat, allMessagesFromChat]);
+  
 
   if (!chat) {
     return (
@@ -86,7 +96,6 @@ function Messagewindow() {
             </div>
           </React.Fragment>
         ))}
-        
       </div>
       <div className="bg-white h-auto rounded-md flex flex-row justify-between m-2 p-2">
         <input

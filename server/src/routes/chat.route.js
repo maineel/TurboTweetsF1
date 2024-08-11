@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userInChat, uploadChatAvatar, newGroupChat, addMembers, personalChat, getMyChats, searchChat, addMessageToChat, deleteChat } from "../controllers/chat.controller.js"
+import { userInChat, uploadChatAvatar, newGroupChat, addMembers, personalChat, getMyChats, searchChat, addMessageToChat, deleteChat, getUserByUsername } from "../controllers/chat.controller.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from '../middlewares/multer.middleware.js';
 
@@ -14,5 +14,6 @@ chatRouter.route("/getMyChats/:user").get(getMyChats);
 chatRouter.route("/searchChat").get(searchChat);
 chatRouter.route("/addMessageToChat").post(addMessageToChat);
 chatRouter.route("/deleteChat/:chatId").delete(deleteChat);
+chatRouter.route("/getUserByUsername/:username").get(getUserByUsername)
 
 export { chatRouter };

@@ -58,22 +58,6 @@ function Stats() {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-        className="text-3xl font-bold font-mono text-red-500"
-      >
-        Loading...
-      </div>
-    );
-  }
-
   if (!isAuthenticated) {
     return (
       <div
@@ -92,6 +76,24 @@ function Stats() {
       </div>
     );
   }
+  
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+        className="text-3xl font-bold font-mono text-red-500"
+      >
+        Loading...
+      </div>
+    );
+  }
+
+  
 
   return (
     <div className="w-full h-auto bg-black">

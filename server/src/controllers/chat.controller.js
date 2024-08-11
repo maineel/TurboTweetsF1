@@ -40,23 +40,30 @@ const uploadChatAvatar = asyncHandler(async (req, res) => {
 });
 
 const newGroupChat = asyncHandler(async (req, res) => {
-  const { name, members } = req.body;
-  const { avatarLocalPath } = req.file?.path;
+  const { name, members, user } = req.body;
 
   if (members.length < 2) {
     throw new ApiError(400, "Group chat must have at least 3 members");
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  const allMembers = [];
+  for(let member of members) {
+    allMembers.push(member._id);
+  }
+  allMembers.push(user._id);
 
-  const allMembers = [...members, req.user._id];
   await Chat.create({
     name,
     groupChat: true,
-    sender: req.user._id,
+    sender: user._id,
     members: allMembers,
-    avatar: avatar.url,
+    senderName: user.userName,
+    senderAvatar: user.avatar,
   });
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, null, "Group chat created successfully"));
 });
 
 const addMembers = asyncHandler(async (req, res) => {
@@ -172,6 +179,19 @@ const deleteChat = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "Chat deleted successfully"));
 });
 
+const getUserByUsername = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+
+  const user = await User.findOne({ userName: username }).select("-password -email -__v -createdAt -updatedAt -refreshToken -fullName -wallet -teams");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User retrieved successfully"));
+});
+
 export {
   userInChat,
   uploadChatAvatar,
@@ -181,5 +201,6 @@ export {
   getMyChats,
   searchChat,
   addMessageToChat,
-  deleteChat
+  deleteChat,
+  getUserByUsername
 };
